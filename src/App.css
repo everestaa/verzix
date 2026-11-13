@@ -1,0 +1,2288 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0b0d0c;
+  color: #f3f5f3;
+  font-family: 'DM Sans', sans-serif;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  background: #101311;
+  border-right: 1px solid #242925;
+  padding: 30px 18px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+  margin-bottom: 55px;
+}
+
+.brand-icon {
+  width: 42px;
+  height: 42px;
+  background: #a3e6b5;
+  color: #101811;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.brand h1 {
+  font-size: 21px;
+  letter-spacing: 2px;
+}
+
+.brand span {
+  font-size: 9px;
+  color: #7f8982;
+  letter-spacing: 1.5px;
+}
+
+.menu-label {
+  color: #657168;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 0 10px;
+  margin-bottom: 14px;
+}
+
+.management {
+  margin-top: 35px;
+}
+
+.sidebar nav {
+  display: grid;
+  gap: 7px;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: #929b94;
+  padding: 13px 12px;
+  border-radius: 9px;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.nav-item span {
+  font-size: 17px;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background: #1d2921;
+  color: #a3e6b5;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 20px 5px 0;
+  border-top: 1px solid #272d29;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-avatar,
+.top-avatar {
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #263c2d;
+  color: #a3e6b5;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-info {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.profile-info strong {
+  font-size: 12px;
+}
+
+.profile-info span {
+  color: #7d8980;
+  font-size: 10px;
+}
+
+.profile-dots {
+  color: #879189;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.topbar {
+  height: 75px;
+  border-bottom: 1px solid #242925;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 38px;
+}
+
+.breadcrumb {
+  color: #9da69f;
+  font-size: 12px;
+}
+
+.breadcrumb span {
+  color: #4e5951;
+  padding: 0 8px;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.icon-button {
+  background: transparent;
+  border: none;
+  color: #a6b0a8;
+  font-size: 22px;
+  position: relative;
+}
+
+.notification i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #a3e6b5;
+  border-radius: 50%;
+  top: 0;
+  right: -2px;
+}
+
+.content {
+  padding: 38px;
+  max-width: 1600px;
+  margin: auto;
+}
+
+.welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #87948a;
+  margin-bottom: 12px;
+}
+
+.welcome h2 {
+  font-size: 27px;
+  letter-spacing: -.8px;
+}
+
+.welcome h2 span {
+  color: #a3e6b5;
+}
+
+.welcome p {
+  font-size: 13px;
+  color: #89938b;
+  margin-top: 9px;
+}
+
+.primary-button {
+  border: none;
+  border-radius: 9px;
+  padding: 13px 19px;
+  background: #a3e6b5;
+  color: #102015;
+  font-weight: 700;
+  font-size: 12px;
+  transition: .2s;
+}
+
+.primary-button:hover {
+  background: #c0f5cd;
+  transform: translateY(-2px);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.stat-card,
+.panel {
+  background: #121714;
+  border: 1px solid #252e28;
+  border-radius: 12px;
+}
+
+.stat-card {
+  padding: 20px;
+}
+
+.stat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #929e95;
+  font-size: 12px;
+}
+
+.stat-icon {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  background: #203027;
+  border-radius: 9px;
+  color: #a3e6b5;
+  font-size: 18px;
+}
+
+.stat-card h3 {
+  font-size: 24px;
+  margin: 19px 0 12px;
+  letter-spacing: -.5px;
+}
+
+.stat-bottom {
+  color: #758078;
+  font-size: 10px;
+}
+
+.positive {
+  color: #a3e6b5;
+  font-weight: 700;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(250px, 1fr);
+  gap: 18px;
+}
+
+.panel {
+  padding: 22px;
+  min-width: 0;
+}
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.panel-heading h3 {
+  font-size: 15px;
+}
+
+.panel-heading p {
+  color: #7d8980;
+  font-size: 11px;
+  margin-top: 6px;
+}
+
+.secondary-button {
+  border: 1px solid #354139;
+  background: transparent;
+  color: #b8c2ba;
+  padding: 9px 12px;
+  border-radius: 7px;
+  font-size: 10px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #77847a;
+  font-weight: 600;
+  padding: 12px 10px;
+  border-bottom: 1px solid #28312b;
+}
+
+td {
+  padding: 16px 10px;
+  border-bottom: 1px solid #222a24;
+  color: #b1bbb3;
+  font-size: 11px;
+}
+
+td strong {
+  display: block;
+  color: #e8eee9;
+  font-size: 11px;
+}
+
+td small {
+  display: block;
+  color: #78847b;
+  margin-top: 5px;
+  font-size: 10px;
+}
+
+.status {
+  display: inline-block;
+  border-radius: 20px;
+  padding: 6px 9px;
+  font-size: 9px;
+}
+
+.confirmed {
+  background: #1b3425;
+  color: #9ee4b1;
+}
+
+.pending {
+  background: #352c1b;
+  color: #e8c477;
+}
+
+.activity-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 0;
+  border-bottom: 1px solid #252e28;
+}
+
+.activity-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+}
+
+.green { background: #203629; color: #a3e6b5; }
+.blue { background: #202f3d; color: #88c7ed; }
+.purple { background: #30253c; color: #c8a3ed; }
+
+.activity-item strong {
+  font-size: 11px;
+  display: block;
+}
+
+.activity-item span {
+  color: #7d8980;
+  font-size: 10px;
+  display: block;
+  margin-top: 5px;
+}
+
+.platform-status {
+  margin-top: auto;
+  padding-top: 25px;
+  color: #a3e6b5;
+  font-size: 11px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #a3e6b5;
+  border-radius: 50%;
+  margin-right: 7px;
+}
+
+footer {
+  color: #647067;
+  font-size: 10px;
+  margin-top: 30px;
+}
+
+@media (max-width: 1100px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    width: 65px;
+    padding: 20px 8px;
+  }
+  .brand {
+    justify-content: center;
+    padding: 0;
+    margin-bottom: 35px;
+  }
+  .brand > div:last-child,
+  .menu-label,
+  .nav-item:not(.active) {
+    display: none;
+  }
+  .nav-item {
+    justify-content: center;
+    padding: 13px 5px;
+    font-size: 0;
+  }
+  .nav-item span {
+    font-size: 19px;
+  }
+  .sidebar-bottom {
+    justify-content: center;
+  }
+  .profile-info,
+  .profile-dots {
+    display: none;
+  }
+  .topbar {
+    padding: 0 15px;
+  }
+  .content {
+    padding: 22px 14px;
+  }
+  .welcome {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .welcome h2 {
+    font-size: 22px;
+  }
+  .stats-grid {
+    gap: 10px;
+  }
+  .stat-card {
+    padding: 13px;
+  }
+  .stat-card h3 {
+    font-size: 19px;
+  }
+  .stat-top {
+    font-size: 10px;
+  }
+  .panel {
+    padding: 14px;
+  }
+}
+/* TURNIX - FORMULARIO DE NEGOCIOS */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  background: #151515;
+  border: 1px solid #292929;
+  border-radius: 18px;
+  padding: 30px;
+  color: white;
+}
+
+.modal h2 {
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.modal p {
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 13px;
+  background: #202020;
+  border: 1px solid #333;
+  border-radius: 9px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.modal input:focus,
+.modal select:focus {
+  border-color: #a5ff00;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 13px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cancel-button {
+  background: #292929;
+  color: white;
+  border: 1px solid #393939;
+}
+.reserva-mensaje {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  margin-top: 20px;
+  background: #10251d;
+  border: 1px solid #1d6545;
+  border-radius: 14px;
+  color: #ffffff;
+}
+
+.reserva-mensaje span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #1d6545;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.reserva-mensaje strong {
+  font-size: 16px;
+}
+
+.reserva-mensaje p {
+  margin: 5px 0 0;
+  color: #b9c9c0;
+  font-size: 14px;
+}
+/* =================================
+   TURNIX - PÁGINA PÚBLICA
+   ================================= */
+
+.public-page {
+  min-height: 100vh;
+  background: #0b0b0b;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  padding: 40px 7%;
+}
+
+.public-page h1 {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.public-page h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.public-page h3 {
+  font-size: 20px;
+}
+
+.public-page p {
+  color: #b5b5b5;
+}
+
+.public-page section {
+  margin-top: 60px;
+}
+
+.public-page button {
+  background: #c9a45c;
+  color: #111;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.public-page input,
+.public-page select {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  padding: 14px;
+  margin: 10px 0 20px;
+  background: #191919;
+  color: white;
+  border: 1px solid #383838;
+  border-radius: 8px;
+}
+
+.public-page label {
+  display: block;
+  color: #c9a45c;
+  margin-top: 15px;
+}
+
+.public-page section > div {
+  background: #171717;
+  border: 1px solid #292929;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.public-page .reserva-mensaje {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  padding: 20px;
+  background: #171717;
+  border: 1px solid #c9a45c;
+  border-radius: 12px;
+}
+
+/* =================================
+   BARBERÍA JUNIOR - DISEÑO PREMIUM
+================================= */
+
+.public-page {
+  background: #0b0b0b;
+  color: #f5f5f5;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.public-page h1,
+.public-page h2,
+.public-page h3 {
+  color: #d6ad62;
+}
+
+.public-page h2 {
+  font-size: 30px;
+  margin: 35px 0 25px;
+  letter-spacing: 1px;
+}
+
+.public-page section {
+  padding: 35px 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.public-page .servicio-card {
+  display: inline-block;
+  vertical-align: top;
+  width: 280px;
+  max-width: 90%;
+  margin: 12px;
+  padding: 15px;
+  background: #171717;
+  border: 1px solid #393027;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,.4);
+  transition: transform .25s ease;
+}
+
+.public-page .servicio-card:hover {
+  transform: translateY(-5px);
+}
+
+.public-page .servicio-card h3 {
+  font-size: 21px;
+  margin-top: 18px;
+}
+
+.public-page .servicio-card p {
+  color: #cccccc;
+  font-size: 15px;
+}
+
+.public-page #reservar {
+  max-width: 600px;
+  margin: 35px auto;
+  padding: 30px 25px;
+  background: #171717;
+  border: 1px solid #55432b;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.4);
+}
+
+.public-page #reservar label {
+  display: block;
+  text-align: left;
+  margin: 18px 0 8px;
+  color: #d6ad62;
+  font-weight: bold;
+}
+
+.public-page #reservar input,
+.public-page #reservar select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
+  border: 1px solid #51432f;
+  border-radius: 8px;
+  background: #242424;
+  color: white;
+  font-size: 15px;
+}
+
+.public-page #reservar button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 8px;
+  background: #c49a52;
+  color: #111;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.public-page #reservar button:hover {
+  background: #e0b96f;
+}
+
+.public-page img {
+  max-width: 100%;
+}
+
+@media (max-width: 600px) {
+  .public-page h1 {
+    font-size: 34px !important;
+  }
+
+  .public-page h2 {
+    font-size: 25px;
+  }
+
+  .public-page section {
+    padding: 25px 12px;
+  }
+
+  .public-page .servicio-card {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 12px 0;
+  }
+}
+
+/* ==========================================
+   BARBERÍA JUNIOR - PREMIUM PRO DESIGN
+========================================== */
+
+.public-page {
+  background: #090909;
+  color: #eeeeee;
+  font-family: 'Arial', sans-serif;
+  letter-spacing: 0.2px;
+}
+
+/* ENCABEZADO PRINCIPAL */
+
+.public-page > header {
+  min-height: 560px !important;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid #b9914e;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+}
+
+.public-page > header img {
+  width: 145px !important;
+  height: 145px !important;
+  padding: 8px;
+  border: 1px solid rgba(210,170,95,.7);
+  border-radius: 50%;
+  background: rgba(0,0,0,.45);
+  box-shadow: 0 0 35px rgba(196,154,82,.25);
+}
+
+.public-page > header h1 {
+  color: #e5c17d;
+  font-size: 58px !important;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 4px 15px rgba(0,0,0,.8);
+}
+
+.public-page > header p {
+  color: #eeeeee;
+  font-size: 17px;
+  letter-spacing: 2px;
+}
+
+.public-page > header a {
+  background: linear-gradient(135deg, #e8c982, #ae8039) !important;
+  padding: 17px 38px !important;
+  border-radius: 4px !important;
+  letter-spacing: 1.5px;
+  box-shadow: 0 8px 25px rgba(196,154,82,.25);
+  transition: all .3s ease;
+}
+
+.public-page > header a:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(196,154,82,.4);
+}
+
+/* SECCIONES */
+
+.public-page section {
+  padding: 55px 20px;
+}
+
+.public-page section h2 {
+  color: #dfbd79;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 35px;
+}
+
+.public-page section h2::after {
+  content: '';
+  display: block;
+  width: 55px;
+  height: 3px;
+  background: #c49a52;
+  margin: 15px auto 0;
+}
+
+/* TARJETAS DE SERVICIOS */
+
+.public-page .servicio-card {
+  width: 300px;
+  margin: 15px;
+  padding: 14px;
+  background: linear-gradient(145deg, #1c1c1c, #101010);
+  border: 1px solid #403321;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0,0,0,.4);
+  transition: all .35s ease;
+}
+
+.public-page .servicio-card:hover {
+  transform: translateY(-9px);
+  border-color: #c49a52;
+  box-shadow: 0 18px 40px rgba(196,154,82,.13);
+}
+
+.public-page .servicio-card img {
+  height: 230px !important;
+  border-radius: 8px !important;
+  transition: transform .4s ease;
+}
+
+.public-page .servicio-card:hover img {
+  transform: scale(1.035);
+}
+
+.public-page .servicio-card h3 {
+  color: #e4c27f;
+  font-size: 22px;
+  margin-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.public-page .servicio-card p {
+  color: #c5c5c5;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* FOTO DEL LOCAL */
+
+.public-page section img {
+  box-shadow: 0 15px 40px rgba(0,0,0,.55);
+}
+
+/* HORARIOS */
+
+.public-page section p {
+  line-height: 1.8;
+  color: #cccccc;
+  font-size: 16px;
+}
+
+/* FORMULARIO DE RESERVAS */
+
+.public-page #reservar {
+  max-width: 650px;
+  margin: 55px auto;
+  padding: 40px 35px;
+  background: linear-gradient(145deg, #1c1c1c, #101010);
+  border: 1px solid #71552e;
+  border-radius: 14px;
+  box-shadow: 0 20px 55px rgba(0,0,0,.55);
+}
+
+.public-page #reservar h2 {
+  margin-top: 0;
+}
+
+.public-page #reservar label {
+  color: #dfbd79;
+  font-size: 14px;
+  letter-spacing: .5px;
+}
+
+.public-page #reservar input,
+.public-page #reservar select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  margin-bottom: 8px;
+  background: #252525;
+  color: white;
+  border: 1px solid #494033;
+  border-radius: 7px;
+  outline: none;
+  transition: border .25s ease;
+}
+
+.public-page #reservar input:focus,
+.public-page #reservar select:focus {
+  border-color: #d2aa62;
+}
+
+.public-page #reservar button {
+  background: linear-gradient(135deg, #e8c982, #ae8039);
+  color: #111;
+  border-radius: 6px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 16px;
+  transition: all .3s ease;
+}
+
+.public-page #reservar button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(196,154,82,.25);
+}
+
+/* ADAPTACIÓN A CELULARES */
+
+@media (max-width: 600px) {
+  .public-page > header {
+    min-height: 450px !important;
+    padding: 20px !important;
+  }
+
+  .public-page > header h1 {
+    font-size: 36px !important;
+    letter-spacing: 1px;
+  }
+
+  .public-page > header img {
+    width: 115px !important;
+    height: 115px !important;
+  }
+
+  .public-page section h2 {
+    font-size: 25px;
+  }
+
+  .public-page .servicio-card {
+    width: 100%;
+    margin: 12px 0;
+    box-sizing: border-box;
+  }
+
+  .public-page #reservar {
+    margin: 30px 12px;
+    padding: 25px 18px;
+  }
+}
+
+/* SELECTOR VISUAL DE SERVICIOS */
+
+.public-page .titulo-servicios {
+  display: block;
+  color: #dfbd79;
+  font-size: 17px;
+  font-weight: bold;
+  text-align: left;
+  margin: 25px 0 15px;
+}
+
+.public-page .servicios-selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 15px 0 30px;
+}
+
+.public-page .servicio-opcion {
+  background: #202020;
+  border: 1px solid #40372b;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+  transition: .3s ease;
+}
+
+.public-page .servicio-opcion.servicio-elegido {
+  border: 2px solid #d6ad62;
+  box-shadow: 0 0 20px rgba(214,173,98,.2);
+}
+
+.public-page .servicio-opcion img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+
+.public-page .servicio-info {
+  padding: 16px;
+}
+
+.public-page .servicio-info h3 {
+  color: #e5c17d;
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+
+.public-page .servicio-info .servicio-precio {
+  color: white;
+  font-size: 21px;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.public-page .servicio-info .servicio-duracion {
+  color: #aaa;
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+.public-page .boton-elegir-servicio {
+  width: 100%;
+  padding: 12px;
+  background: #c49a52;
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: .5px;
+}
+
+.public-page .servicio-elegido .boton-elegir-servicio {
+  background: #e5c17d;
+}
+
+@media (max-width: 600px) {
+  .public-page .servicios-selector {
+    grid-template-columns: 1fr;
+  }
+
+  .public-page .servicio-opcion {
+    display: grid;
+    grid-template-columns: 115px 1fr;
+  }
+
+  .public-page .servicio-opcion img {
+    height: 100%;
+    min-height: 190px;
+  }
+
+  .public-page .servicio-info {
+    padding: 12px;
+  }
+}
+
+/* =================================
+   HORARIOS PROFESIONALES
+================================= */
+
+.public-page .titulo-horarios {
+  display: block;
+  text-align: left;
+  color: #dfbd79;
+  font-weight: bold;
+  margin: 25px 0 15px;
+}
+
+.public-page .horarios-selector {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 15px 0 25px;
+}
+
+.public-page .horario-opcion {
+  background: #242424;
+  color: #eeeeee;
+  border: 1px solid #55432b;
+  padding: 14px 8px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all .25s ease;
+}
+
+.public-page .horario-opcion:hover {
+  border-color: #d6ad62;
+  background: #302719;
+  transform: translateY(-2px);
+}
+
+.public-page .horario-opcion.horario-elegido {
+  background: linear-gradient(135deg, #e8c982, #ae8039);
+  color: #111;
+  border-color: #e8c982;
+  box-shadow: 0 4px 15px rgba(196,154,82,.25);
+}
+
+.public-page .sin-horarios {
+  background: #251c16;
+  color: #e0b96f;
+  border: 1px solid #55432b;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+  .public-page .horarios-selector {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .public-page .horario-opcion {
+    padding: 13px 4px;
+    font-size: 13px;
+  }
+}
+
+/* RESUMEN DE RESERVA */
+
+.public-page .resumen-reserva {
+  background: linear-gradient(145deg, #282116, #17130e);
+  border: 1px solid #c49a52;
+  border-radius: 12px;
+  padding: 22px;
+  margin: 30px 0 20px;
+  text-align: left;
+}
+
+.public-page .resumen-reserva h3 {
+  color: #e5c17d;
+  text-align: center;
+  letter-spacing: 1.5px;
+  margin: 0 0 20px;
+  font-size: 17px;
+}
+
+.public-page .resumen-linea {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #40372b;
+}
+
+.public-page .resumen-linea:last-child {
+  border-bottom: none;
+}
+
+.public-page .resumen-linea span {
+  color: #aaa;
+}
+
+.public-page .resumen-linea strong {
+  color: #f1d69e;
+  text-align: right;
+}
+/* BOTÓN CONFIRMAR RESERVA */
+
+.public-page .boton-confirmar-reserva {
+  width: 100%;
+  padding: 18px 20px;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #e8c982, #b88942);
+  color: #111;
+  border: 1px solid #f1d69e;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(214, 173, 98, 0.18);
+}
+
+.public-page .boton-confirmar-reserva:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 28px rgba(214, 173, 98, 0.35);
+  background: linear-gradient(135deg, #f5dfa9, #d6ad62);
+}
+
+.public-page .boton-confirmar-reserva:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =================================
+   TURNIX - OPTIMIZACIÓN PARA CELULARES
+================================= */
+
+@media (max-width: 768px) {
+  .public-page {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .public-page .hero {
+    min-height: 480px;
+    padding: 35px 18px;
+    background-position: center;
+  }
+
+  .public-page h1 {
+    font-size: clamp(30px, 8vw, 42px);
+  }
+
+  .public-page h2 {
+    font-size: 25px;
+  }
+
+  .public-page section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .public-page .servicios-selector {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .public-page .servicio-opcion {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .public-page .servicio-opcion img {
+    max-width: 100%;
+  }
+
+  .public-page .horarios-selector {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .public-page .horario-opcion {
+    min-width: 0;
+    padding: 13px 3px;
+    font-size: 13px;
+  }
+
+  .public-page input,
+  .public-page select,
+  .public-page textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  .public-page .resumen-reserva {
+    padding: 16px;
+  }
+
+  .public-page .resumen-linea {
+    flex-wrap: wrap;
+    font-size: 14px;
+  }
+
+  .public-page .boton-confirmar-reserva {
+    padding: 17px 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .public-page .horarios-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .public-page .resumen-linea {
+    gap: 5px;
+  }
+}
+
+/* SERVICIOS EN CUADROS PARA CELULARES */
+
+@media (max-width: 768px) {
+  .public-page .servicios-selector {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .public-page .servicio-opcion {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .public-page .servicio-opcion img {
+    width: 100%;
+    height: 115px;
+    object-fit: cover;
+  }
+
+  .public-page .servicio-info {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 5px;
+  }
+
+  .public-page .servicio-info h3 {
+    font-size: 14px;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .public-page .servicio-precio {
+    font-size: 15px;
+    margin: 3px 0;
+  }
+
+  .public-page .servicio-duracion {
+    font-size: 12px;
+    margin: 0 0 5px;
+  }
+
+  .public-page .boton-elegir-servicio {
+    width: 100%;
+    padding: 10px 5px;
+    font-size: 10px;
+    line-height: 1.3;
+    letter-spacing: 0.3px;
+    margin-top: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .public-page .servicios-selector {
+    gap: 8px;
+  }
+
+  .public-page .servicio-opcion img {
+    height: 95px;
+  }
+
+  .public-page .servicio-info {
+    padding: 8px;
+  }
+
+  .public-page .servicio-info h3 {
+    font-size: 13px;
+  }
+
+  .public-page .boton-elegir-servicio {
+    font-size: 9px;
+    padding: 9px 3px;
+  }
+}
+
+/* SERVICIOS ULTRA COMPACTOS EN CELULARES */
+
+@media (max-width: 768px) {
+
+  .public-page .servicios-selector {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .public-page .servicio-opcion {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+    height: auto !important;
+    border-radius: 9px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+
+  .public-page .servicio-opcion img {
+    width: 100% !important;
+    height: 75px !important;
+    min-height: 75px !important;
+    object-fit: cover !important;
+  }
+
+  .public-page .servicio-info {
+    padding: 7px !important;
+    gap: 3px !important;
+    min-width: 0 !important;
+  }
+
+  .public-page .servicio-info h3 {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+  }
+
+  .public-page .servicio-precio {
+    font-size: 13px !important;
+    margin: 2px 0 !important;
+  }
+
+  .public-page .servicio-duracion {
+    font-size: 10px !important;
+    margin: 0 0 3px !important;
+  }
+
+  .public-page .boton-elegir-servicio {
+    width: 100% !important;
+    min-height: 30px !important;
+    padding: 6px 3px !important;
+    margin: 3px 0 0 !important;
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+    border-radius: 5px !important;
+  }
+}
+
+/* ALINEAR BOTONES DE SERVICIOS */
+
+@media (max-width: 768px) {
+  .public-page .servicio-opcion {
+    height: 100% !important;
+  }
+
+  .public-page .servicio-info {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    height: 100% !important;
+  }
+
+  .public-page .servicio-info h3 {
+    min-height: 30px !important;
+  }
+
+  .public-page .servicio-precio {
+    min-height: 18px !important;
+  }
+
+  .public-page .servicio-duracion {
+    min-height: 15px !important;
+  }
+
+  .public-page .boton-elegir-servicio {
+    margin-top: auto !important;
+  }
+}
+
+/* CONFIRMACION DE RESERVA TURNIX */
+
+.public-page .confirmacion-whatsapp {
+  margin: 30px 0;
+  padding: 30px 20px;
+  background: linear-gradient(145deg, #211c13, #111111);
+  border: 1px solid #c49a52;
+  border-radius: 16px;
+  text-align: center;
+  animation: aparecerConfirmacion 0.5s ease;
+}
+
+.public-page .confirmacion-icono {
+  width: 65px;
+  height: 65px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e8c982, #ae8039);
+  color: #111;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.public-page .confirmacion-whatsapp h2 {
+  color: #e8c982;
+  font-size: 23px;
+  margin: 0 0 12px;
+}
+
+.public-page .confirmacion-whatsapp p {
+  color: #ddd;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.public-page .boton-whatsapp-confirmacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 22px auto 15px;
+  padding: 15px 18px;
+  max-width: 350px;
+  background: #25D366;
+  color: white;
+  border-radius: 9px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  transition: 0.3s ease;
+}
+
+.public-page .boton-whatsapp-confirmacion:hover {
+  background: #1ebe5d;
+  transform: translateY(-2px);
+}
+
+.public-page .confirmacion-whatsapp small {
+  color: #aaa;
+  font-size: 11px;
+}
+
+@keyframes aparecerConfirmacion {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* VENTANA DE CONFIRMACION CENTRADA */
+
+.public-page .confirmacion-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100vh;
+  min-height: 100dvh;
+  z-index: 99999 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 20px !important;
+  box-sizing: border-box !important;
+  background: rgba(0, 0, 0, 0.82);
+}
+
+.public-page .confirmacion-whatsapp {
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  animation: aparecerConfirmacion 0.35s ease;
+}
+
+@media (max-width: 600px) {
+  .public-page .confirmacion-whatsapp {
+    max-width: 340px !important;
+    padding: 25px 16px !important;
+  }
+
+  .public-page .confirmacion-whatsapp h2 {
+    font-size: 21px !important;
+  }
+}
+
+/* BOTON CERRAR CONFIRMACION */
+
+.public-page .boton-cerrar-confirmacion {
+  display: block;
+  width: 100%;
+  max-width: 180px;
+  margin: 12px auto 0;
+  padding: 12px 20px;
+  background: transparent;
+  color: #e8c982;
+  border: 1px solid #c49a52;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.public-page .boton-cerrar-confirmacion:hover {
+  background: #c49a52;
+  color: #111;
+}
+
+/* NUESTROS SERVICIOS - TARJETAS COMPACTAS */
+
+@media (max-width: 768px) {
+
+  .public-page .servicios-lista {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    align-items: stretch;
+  }
+
+  .public-page .servicio-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 9px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+  }
+
+  .public-page .servicio-card img {
+    width: 100% !important;
+    height: 105px !important;
+    object-fit: cover !important;
+    border-radius: 7px !important;
+  }
+
+  .public-page .servicio-card h3 {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    margin: 8px 0 5px !important;
+  }
+
+  .public-page .servicio-card p {
+    font-size: 12px !important;
+    margin: 4px 0 !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .public-page .servicios-lista {
+    gap: 8px !important;
+  }
+
+  .public-page .servicio-card {
+    padding: 7px !important;
+  }
+
+  .public-page .servicio-card img {
+    height: 85px !important;
+  }
+}
+
+/* ===================================
+   TURNIX - TIPOGRAFIA PREMIUM
+=================================== */
+
+/* Fuente principal para toda la página */
+
+.public-page,
+.public-page * {
+  font-family: 'Manrope', sans-serif !important;
+}
+
+/* Títulos elegantes */
+
+.public-page h1,
+.public-page h2,
+.public-page h3 {
+  font-family: 'Playfair Display', serif !important;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* Precios */
+
+.public-page .servicio-precio,
+.public-page .servicio-card p:first-of-type,
+.public-page .resumen-linea strong {
+  font-family: 'Manrope', sans-serif !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+}
+
+/* Botones */
+
+.public-page button,
+.public-page a {
+  font-family: 'Manrope', sans-serif !important;
+  font-weight: 700;
+}
+
+/* Campos del formulario */
+
+.public-page input,
+.public-page select,
+.public-page textarea {
+  font-family: 'Manrope', sans-serif !important;
+  font-weight: 500;
+}
+
+/* Etiquetas y textos secundarios */
+
+.public-page label,
+.public-page small,
+.public-page .servicio-duracion {
+  font-family: 'Manrope', sans-serif !important;
+}
+/* OCULTAR ESPACIO DE DURACION */
+
+.public-page .servicio-duracion {
+  display: none !important;
+}
+.public-page .subtitulo-negocio {
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #d6b36a;
+  margin-top: 12px;
+  opacity: 0.95;
+}
+
+@media (max-width: 600px) {
+  .public-page .subtitulo-negocio {
+    font-size: 11px;
+    letter-spacing: 3px;
+  }
+}
+
+/* ===== CALENDARIO TURNIX PREMIUM ===== */
+
+.calendar-premium {
+  background: #ffffff;
+  border: 1px solid #e9eaf0;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(20, 25, 50, 0.04);
+}
+
+.calendar-premium .calendar-day {
+  min-height: 90px;
+  border: 1px solid #eceef3;
+  border-radius: 12px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.calendar-premium .calendar-day:hover {
+  border-color: #6366f1;
+  background: #f7f7ff;
+  transform: translateY(-2px);
+}
+
+.calendar-premium .calendar-day.selected {
+  border: 2px solid #6366f1;
+  background: #f0f0ff;
+}
+
+.calendar-premium .calendar-day.today {
+  background: #f5f3ff;
+}
+
+.calendar-premium .calendar-day-number {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.calendar-premium .calendar-badge {
+  background: #6366f1;
+  color: white;
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.calendar-premium .calendar-weekday {
+  color: #777b8c;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.calendar-premium .calendar-navigation button {
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .calendar-premium {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .calendar-premium .calendar-day {
+    min-height: 62px;
+    border-radius: 8px;
+    gap: 4px;
+  }
+
+  .calendar-premium .calendar-day-number {
+    font-size: 13px;
+  }
+
+  .calendar-premium .calendar-badge {
+    font-size: 9px;
+    padding: 3px 5px;
+  }
+
+  .calendar-premium .calendar-weekday {
+    font-size: 10px;
+  }
+}
+
+/* =================================
+   TURNIX - NAVEGACIÓN DEL PANEL
+================================= */
+
+.app {
+  min-height: 100vh;
+  align-items: flex-start;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.content {
+  width: 100%;
+}
+
+/* =========================================
+   TURNIX - DISEÑOS PERSONALIZABLES
+   ========================================= */
+
+/* DISEÑO CLÁSICO: conserva el estilo actual */
+.public-page.diseno-clasico {
+  --color-principal: var(--color-principal, #111111);
+  --color-secundario: var(--color-secundario, #D4AF37);
+}
+
+/* =========================================
+   TURNIX - DISEÑO MODERNO
+========================================= */
+
+.public-page.diseno-moderno {
+  font-family: Arial, sans-serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.public-page.diseno-moderno section {
+  padding: 60px 25px;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.public-page.diseno-moderno section h2 {
+  font-size: 32px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.public-page.diseno-moderno .servicios-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.public-page.diseno-moderno .servicio-card {
+  background: white;
+  color: #222;
+  border: 1px solid #eeeeee;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,.07);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.public-page.diseno-moderno .servicio-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0,0,0,.12);
+}
+
+.public-page.diseno-moderno .servicio-card h3,
+.public-page.diseno-moderno .servicio-card p {
+  margin: 15px;
+}
+
+.public-page.diseno-moderno a[href="#reservar"] {
+  border-radius: 30px !important;
+  padding: 16px 35px !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+/* =========================================
+   TURNIX - DISEÑO ELEGANTE
+========================================= */
+
+.public-page.diseno-elegante {
+  font-family: Georgia, serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.public-page.diseno-elegante section {
+  padding: 65px 25px;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.public-page.diseno-elegante section h2 {
+  text-align: center;
+  font-family: Georgia, serif;
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.public-page.diseno-elegante .servicios-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.public-page.diseno-elegante .servicio-card {
+  background: var(--color-principal);
+  color: white;
+  border: 1px solid var(--color-secundario);
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+}
+
+.public-page.diseno-elegante .servicio-card h3 {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin: 20px;
+}
+
+.public-page.diseno-elegante .servicio-card p {
+  margin: 20px;
+  color: var(--color-secundario);
+}
+
+.public-page.diseno-elegante a[href="#reservar"] {
+  border-radius: 3px !important;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 17px 35px !important;
+}
+/* =========================================
+   TURNIX - PERSONALIZACIÓN POR NEGOCIO
+========================================= */
+
+.public-page {
+  --color-principal: #111111;
+  --color-secundario: #D4AF37;
+  --color-fondo: #FFFFFF;
+  --color-texto: #111111;
+}
+
+/* Colores de botones */
+.public-page a[href="#reservar"],
+.public-page button {
+  transition: all 0.25s ease;
+}
+
+/* Diseño moderno */
+.public-page.diseno-moderno {
+  font-family: Arial, sans-serif;
+}
+
+.public-page.diseno-moderno section {
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.public-page.diseno-moderno .servicio-card {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Diseño elegante */
+.public-page.diseno-elegante {
+  font-family: Georgia, serif;
+}
+
+.public-page.diseno-elegante .servicio-card {
+  border-radius: 4px;
+  border: 1px solid var(--color-secundario);
+}
+
+/* =========================================
+   TURNIX - DISEÑO CLÁSICO
+========================================= */
+
+.public-page.diseno-clasico {
+  font-family: inherit;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.public-page.diseno-clasico .servicio-card {
+  border-radius: 12px;
+  transition: transform .2s ease;
+}
+
+.public-page.diseno-clasico .servicio-card:hover {
+  transform: translateY(-3px);
+}
+/* =========================================
+   TURNIX - AJUSTE RESPONSIVE GENERAL
+========================================= */
+
+@media (max-width: 768px) {
+
+  .public-page,
+  .public-page * {
+    box-sizing: border-box;
+  }
+
+  .public-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* PORTADA Y LOGO */
+
+  .public-page > header {
+    width: 100%;
+    min-height: 420px !important;
+    padding: 30px 16px !important;
+    background-position: center center !important;
+  }
+
+  .public-page > header img {
+    width: 125px !important;
+    height: 125px !important;
+    max-width: 40vw;
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+
+  .public-page > header h1 {
+    font-size: clamp(27px, 7vw, 38px) !important;
+    overflow-wrap: anywhere;
+  }
+
+  .public-page > header p {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  /* SECCIONES */
+
+  .public-page section {
+    width: 100%;
+    max-width: 100%;
+    padding: 35px 14px !important;
+  }
+
+  .public-page h2 {
+    font-size: clamp(21px, 6vw, 27px) !important;
+    overflow-wrap: anywhere;
+  }
+
+  /* SERVICIOS */
+
+  .public-page .servicios-lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: 100%;
+  }
+
+  .public-page .servicio-card {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .public-page .servicio-card img {
+    width: 100% !important;
+    height: clamp(90px, 27vw, 130px) !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  /* FOTOS DEL LOCAL Y GALERÍA */
+
+  .public-page section img {
+    max-width: 100%;
+  }
+
+  /* RESERVAS */
+
+  .public-page .servicios-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    width: 100%;
+  }
+
+  .public-page .servicio-opcion {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .public-page .servicio-opcion img {
+    width: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  .public-page button,
+  .public-page a {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .public-page input,
+  .public-page select,
+  .public-page textarea {
+    max-width: 100% !important;
+  }
+}
+
+/* CELULARES PEQUEÑOS */
+
+@media (max-width: 380px) {
+
+  .public-page .servicios-lista,
+  .public-page .servicios-selector {
+    gap: 7px !important;
+  }
+
+  .public-page .servicio-card {
+    padding: 6px !important;
+  }
+
+  .public-page .servicio-card img {
+    height: 90px !important;
+  }
+
+  .public-page > header img {
+    width: 110px !important;
+    height: 110px !important;
+  }
+
+  .public-page section {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+}
