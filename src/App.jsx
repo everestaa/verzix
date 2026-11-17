@@ -1940,7 +1940,7 @@ return (
   }}
 >
         <div className="brand">
-          <div className="brand-icon">T</div>
+<div className="brand-icon">V.</div>
           <div>
             <h1>VERZIX</h1>
             <span>BOOKING PLATFORM</span>
