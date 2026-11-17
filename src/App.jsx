@@ -10,6 +10,7 @@ import PersonalizarNegocio from './PersonalizarNegocio'
 
 function PanelAdmin() {
   const [sesion, setSesion] = useState(null)
+  const [menuMovilAbierto, setMenuMovilAbierto] = useState(false)
   const [esSuperAdmin, setEsSuperAdmin] = useState(false)
   const [seccionActiva, setSeccionActiva] = useState('dashboard')
   const [periodoEstadisticas, setPeriodoEstadisticas] = useState('6meses')
@@ -557,7 +558,22 @@ const cargarReservas = async (negocio) => {
   setNegocioSeleccionado(negocio)
   setMostrarReservas(true)
 }
+const cargarTodasReservas = async () => {
+  const { data, error } = await supabase
+    .from('reservas')
+    .select('*, servicios(nombre, precio, duracion), negocios(nombre)')
+    .order('fecha', { ascending: true })
 
+  if (error) {
+    alert('Error al cargar todas las reservas: ' + error.message)
+    return
+  }
+
+  setReservas(data || [])
+  setNegocioSeleccionado(null)
+  setMostrarReservas(true)
+  setSeccionActiva('reservas')
+}
 const cargarCalendario = async (negocio) => {
   const { data, error } = await supabase
     .from('reservas')
@@ -1746,14 +1762,14 @@ const cierreDeHoy = cajaActiva
           new Date(b.abierto_at) - new Date(a.abierto_at)
       )[0] || null
   if (cargando || (sesion && cargandoRol)) {
-  return <div className="app">Verificando acceso a TURNIX...</div>
+  return <div className="app">Verificando acceso a VERZIX...</div>
 }
 
 if (sesion && rolUsuario !== 'super_admin' && rolUsuario !== 'owner') {
   return (
     <div className="login-screen">
       <div className="login-card">
-        <h1>TURNIX</h1>
+        <h1>VERZIX</h1>
         <p>Tu cuenta no tiene permisos para acceder al panel.</p>
         <button className="primary-button" onClick={cerrarSesion}>
           Cerrar sesión
@@ -1767,7 +1783,7 @@ if (!sesion) {
   return (
     <div className="login-screen">
       <div className="login-card">
-        <h1>TURNIX</h1>
+        <h1>VERZIX</h1>
         <p>Ingresá a tu panel de administración</p>
 
         <form onSubmit={iniciarSesion}>
@@ -1802,7 +1818,7 @@ return (
   <div className="modal-overlay">
     <div className="modal">
 <h2>{negocioEditando ? 'Editar negocio' : 'Agregar nuevo negocio'}</h2>
-      <p>Completá los datos para registrar tu negocio en TURNIX.</p>
+      <p>Completá los datos para registrar tu negocio en VERZIX.</p>
 
       <input
         type="text"
@@ -1915,11 +1931,18 @@ return (
     </div>
   </div>
 )}
-      <aside className="sidebar">
+<aside
+  className={`sidebar ${menuMovilAbierto ? 'sidebar-open' : ''}`}
+  onClick={(e) => {
+    if (e.target.closest('.nav-item')) {
+      setMenuMovilAbierto(false)
+    }
+  }}
+>
         <div className="brand">
           <div className="brand-icon">T</div>
           <div>
-            <h1>TURNIX</h1>
+            <h1>VERZIX</h1>
             <span>BOOKING PLATFORM</span>
           </div>
         </div>
@@ -2143,10 +2166,23 @@ onClick={(e) => {
 </button>
         </div>
       </aside>
+      {menuMovilAbierto && (
+  <button
+    className="sidebar-overlay"
+    onClick={() => setMenuMovilAbierto(false)}
+    aria-label="Cerrar menú"
+  />
+)}
 
       <main className="main">
         <header className="topbar">
-          <div className="breadcrumb">TURNIX <span>/</span> Dashboard</div>
+          <button
+  className="mobile-menu-button"
+  onClick={() => setMenuMovilAbierto(!menuMovilAbierto)}
+>
+  ☰
+</button>
+          <div className="breadcrumb">VERZIX <span>/</span> Dashboard</div>
           <div className="top-actions">
             <button className="icon-button">⌕</button>
             <button className="icon-button notification">♧<i /></button>
@@ -2167,7 +2203,7 @@ onClick={(e) => {
 
   <h2>
     {esSuperAdmin
-      ? '¡Bienvenido a TURNIX!'
+      ? '¡Bienvenido a VERZIX!'
       : `¡Bienvenido, ${negocios[0]?.propietario || 'propietario'}!`}
     <span> ✦</span>
   </h2>
@@ -2197,7 +2233,7 @@ onClick={(e) => {
                 </div>
                 <h3>{stat.value}</h3>
            <div className="stat-bottom">
-  <span>Datos reales de TURNIX</span>
+  <span>Datos reales de VERZIX</span>
 </div>
               </div>
             ))}
@@ -2210,7 +2246,7 @@ onClick={(e) => {
 
 <p>
   {esSuperAdmin
-    ? 'Negocios que forman parte de TURNIX'
+    ? 'Negocios que forman parte de VERZIX'
     : 'Información y administración de tu negocio'}
 </p>
               </div>
@@ -2220,96 +2256,98 @@ onClick={(e) => {
             {negocios.length === 0 ? (
               <p>Todavía no hay negocios registrados.</p>
             ) : (
-              <div className="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>NEGOCIO</th>
-                      <th>PROPIETARIO</th>
-                      <th>WHATSAPP</th>
-                      <th>DIRECCIÓN</th>
-                      <th>TIPO</th>
-                      <th>ACCIONES</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {negocios.map((negocio) => (
-                      <tr key={negocio.id}>
-                        <td><strong>{negocio.nombre}</strong></td>
-                        <td>{negocio.propietario}</td>
-                        <td>{negocio.whatsapp}</td>
-                        <td>{negocio.direccion || 'No especificada'}</td>
-<td>{negocio.tipo}</td>
+<>
+<div className="tabla-negocios-desktop table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>NEGOCIO</th>
+        <th>PROPIETARIO</th>
+        <th>WHATSAPP</th>
+        <th>DIRECCIÓN</th>
+        <th>TIPO</th>
+        <th>ACCIONES</th>
+      </tr>
+    </thead>
+    <tbody>
+      {negocios.map((negocio) => (
+        <tr key={negocio.id}>
+          <td><strong>{negocio.nombre}</strong></td>
+          <td>{negocio.propietario}</td>
+          <td>{negocio.whatsapp}</td>
+          <td>{negocio.direccion || 'No especificada'}</td>
+          <td>{negocio.tipo}</td>
+          <td>
+            {esSuperAdmin && (
+              <>
+                <button className="secondary-button" onClick={() => prepararEdicion(negocio)}>Editar</button>
+                <button className="secondary-button" onClick={() => {
+                  setSeccionActiva('servicios')
+                  cargarServicios(negocio)
+                }}>Servicios</button>
+                <button className="secondary-button" onClick={() => cargarReservas(negocio)}>Reservas</button>
+                <button className="secondary-button" onClick={() => eliminarNegocio(negocio.id)} style={{ color: '#ff5555', marginLeft: '8px' }}>Eliminar</button>
+              </>
+            )}
 
+            {!esSuperAdmin && (
+              <>
+                <button className="secondary-button" onClick={() => {
+                  setSeccionActiva('servicios')
+                  cargarServicios(negocio)
+                }}>Mis servicios</button>
+                <button className="secondary-button" onClick={() => {
+                  setSeccionActiva('reservas')
+                  cargarReservas(negocio)
+                }}>Mis reservas</button>
+              </>
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
 
-<td>
-  {esSuperAdmin && (
-    <>
-      <button
-        className="secondary-button"
-        onClick={() => prepararEdicion(negocio)}
-      >
-        Editar
-      </button>
+<div className="negocios-mobile-cards">
+  {negocios.map((negocio) => (
+    <div className="negocio-mobile-card" key={negocio.id}>
+      <h3>{negocio.nombre}</h3>
+      <p><strong>Propietario:</strong> {negocio.propietario}</p>
+      <p><strong>WhatsApp:</strong> {negocio.whatsapp}</p>
+      <p><strong>Dirección:</strong> {negocio.direccion || 'No especificada'}</p>
+      <p><strong>Tipo:</strong> {negocio.tipo}</p>
 
-<button
-  className="secondary-button"
-  onClick={() => {
-    setSeccionActiva('servicios')
-    cargarServicios(negocio)
-  }}
->
-  Servicios
-</button>
+      <div className="negocio-mobile-actions">
+        {esSuperAdmin && (
+          <>
+            <button className="secondary-button" onClick={() => prepararEdicion(negocio)}>Editar</button>
+            <button className="secondary-button" onClick={() => {
+              setSeccionActiva('servicios')
+              cargarServicios(negocio)
+            }}>Servicios</button>
+            <button className="secondary-button" onClick={() => cargarReservas(negocio)}>Reservas</button>
+            <button className="secondary-button" onClick={() => eliminarNegocio(negocio.id)} style={{ color: '#ff5555' }}>Eliminar</button>
+          </>
+        )}
 
-      <button
-        className="secondary-button"
-        onClick={() => cargarReservas(negocio)}
-      >
-        Reservas
-      </button>
-
-      <button
-        className="secondary-button"
-        onClick={() => eliminarNegocio(negocio.id)}
-        style={{ color: '#ff5555', marginLeft: '8px' }}
-      >
-        Eliminar
-      </button>
-    </>
-  )}
-
-{!esSuperAdmin && (
-  <>
-    <button
-      className="secondary-button"
-      onClick={() => {
-        setSeccionActiva('servicios')
-        cargarServicios(negocio)
-      }}
-    >
-      Mis servicios
-    </button>
-
-    <button
-      className="secondary-button"
-      onClick={() => {
-        setSeccionActiva('reservas')
-        cargarReservas(negocio)
-      }}
-    >
-      Mis reservas
-    </button>
-  </>
-)}
-</td>
-
-
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+        {!esSuperAdmin && (
+          <>
+            <button className="secondary-button" onClick={() => {
+              setSeccionActiva('servicios')
+              cargarServicios(negocio)
+            }}>Mis servicios</button>
+            <button className="secondary-button" onClick={() => {
+              setSeccionActiva('reservas')
+              cargarReservas(negocio)
+            }}>Mis reservas</button>
+          </>
+        )}
+      </div>
+    </div>
+  ))}
+</div>
+</>
             )}
           </section>
 
@@ -2320,43 +2358,66 @@ onClick={(e) => {
                   <h3>Reservas recientes</h3>
                   <p>Últimos movimientos de la plataforma</p>
                 </div>
-                <button className="secondary-button">Ver todas ↗</button>
+                <button
+  className="secondary-button"
+  onClick={cargarTodasReservas}
+>
+  Ver todas ↗
+</button>
               </div>
 
-              <div className="table-wrap">
-                <table>
-<thead>
-  <tr>
-    <th>CÓDIGO</th>
-    <th>CLIENTE</th>
-    <th>NEGOCIO</th>
-    <th>HORARIO</th>
-    <th>ESTADO</th>
-  </tr>
-</thead>
-<tbody>
 
-{reservasRecientes.map((reserva) => (
-  <tr key={reserva.id}>
-    <td>
-      <strong>{reserva.cliente_nombre}</strong>
-      <small>{reserva.servicios?.nombre || 'Sin servicio'}</small>
-    </td>
-    <td>{reserva.negocios?.nombre || 'Sin negocio'}</td>
-    <td>{String(reserva.hora).slice(0, 5)}</td>
-    <td>
-      <span className={`status ${
-        reserva.estado === 'Confirmada' ? 'confirmed' : 'pending'
-      }`}>
-        {reserva.estado}
-      </span>
-    </td>
-  </tr>
-))}
+<div className="reservas-recientes-desktop table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>CLIENTE</th>
+        <th>NEGOCIO</th>
+        <th>HORARIO</th>
+        <th>ESTADO</th>
+      </tr>
+    </thead>
+    <tbody>
+      {reservasRecientes.map((reserva) => (
+        <tr key={reserva.id}>
+          <td>
+            <strong>{reserva.cliente_nombre}</strong>
+            <small>{reserva.servicios?.nombre || 'Sin servicio'}</small>
+          </td>
+          <td>{reserva.negocios?.nombre || 'Sin negocio'}</td>
+          <td>{String(reserva.hora).slice(0, 5)}</td>
+          <td>
+            <span className={`status ${
+              reserva.estado === 'Confirmada' ? 'confirmed' : 'pending'
+            }`}>
+              {reserva.estado}
+            </span>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
 
-                  </tbody>
-                </table>
-              </div>
+<div className="reservas-recientes-mobile">
+  {reservasRecientes.map((reserva) => (
+    <div className="reserva-reciente-card" key={reserva.id}>
+      <h4>{reserva.cliente_nombre}</h4>
+      <p><strong>Servicio:</strong> {reserva.servicios?.nombre || 'Sin servicio'}</p>
+      <p><strong>Negocio:</strong> {reserva.negocios?.nombre || 'Sin negocio'}</p>
+      <p><strong>Horario:</strong> {String(reserva.hora).slice(0, 5)}</p>
+      <p>
+        <strong>Estado:</strong>{' '}
+        <span className={`status ${
+          reserva.estado === 'Confirmada' ? 'confirmed' : 'pending'
+        }`}>
+          {reserva.estado}
+        </span>
+      </p>
+    </div>
+  ))}
+</div>
+
             </section>
 
             <section className="panel activity-panel">
@@ -2377,7 +2438,7 @@ onClick={(e) => {
       {negocios.length} {esSuperAdmin ? 'negocios' : 'negocio'}
     </strong>
     <span>
-      {esSuperAdmin ? 'Registrados en TURNIX' : 'Vinculado a tu cuenta'}
+      {esSuperAdmin ? 'Registrados en VERZIX' : 'Vinculado a tu cuenta'}
     </span>
   </div>
 </div>
@@ -3074,7 +3135,11 @@ onClick={() => prepararEdicionServicio(servicio)}
   <section className="panel" style={{ marginTop: '24px' }}>
     <div className="panel-heading">
       <div>
-        <h3>Reservas de {negocioSeleccionado?.nombre}</h3>
+<h3>
+  {negocioSeleccionado
+    ? `Reservas de ${negocioSeleccionado.nombre}`
+    : 'Reservas de todos los negocios'}
+</h3>
         <p>Administrá las reservas de tus clientes</p>
       </div>
 
@@ -3860,7 +3925,7 @@ estadisticasGrafico.flatMap(m => [
   </section>
 )}
 
-          <footer>© 2026 TURNIX. Todos los derechos reservados.</footer>
+          <footer>© 2026 VERZIX. Todos los derechos reservados.</footer>
         </section>
       </main>
     </div>
