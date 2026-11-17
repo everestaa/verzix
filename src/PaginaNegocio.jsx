@@ -412,8 +412,10 @@ alt={`Interior de ${personalizacion?.nombre_publico || negocio.nombre}`}
 </div>
 
 
+<div className="fecha-reserva-contenedor">
   <label>Fecha</label>
   <input
+    className="campo-fecha-reserva"
     type="date"
     value={fechaSeleccionada}
     min={(() => {
@@ -425,6 +427,7 @@ alt={`Interior de ${personalizacion?.nombre_publico || negocio.nombre}`}
       cargarHorarios(e.target.value, servicioSeleccionado)
     }}
   />
+</div>
 
 
 <label className="titulo-horarios">Elegí tu horario</label>
