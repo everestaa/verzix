@@ -1940,13 +1940,16 @@ return (
   }}
 >
         <div className="brand">
-<div className="brand-icon">V.</div>
-          <div>
-            <h1>VERZIX</h1>
-            <span>BOOKING PLATFORM</span>
-          </div>
-        </div>
-
+<img
+  src="/src/assets/verzix-logo.png"
+  alt="VERZIX"
+  className="brand-logo"
+/>
+<div>
+  <h1>VERZIX</h1>
+  <span>BOOKING PLATFORM</span>
+</div>
+</div>
        
 
 
@@ -2460,7 +2463,7 @@ onClick={(e) => {
               </>
   )}
 {seccionActiva === 'ingresos' && (
-  <section className="panel" style={{ marginTop: '24px' }}>
+  <section className="panel income-section" style={{ marginTop: '24px' }}>
     <div className="panel-heading">
       <div>
         <h3>Caja de {negocioSeleccionado?.nombre}</h3>
@@ -2872,9 +2875,9 @@ onClick={() => setSeccionActiva('dashboard')}
 )}
  
 {seccionActiva === 'ingresos' && (
-  <div style={{ marginTop: '32px' }}>
+  <div className="income-closures-section" style={{ marginTop: '32px' }}>
     <h3>Historial de cierres</h3>
-    <div style={{ marginTop: '15px', marginBottom: '18px' }}>
+<div className="income-date-filter" style={{ marginTop: '15px', marginBottom: '18px' }}>
   <label style={{ display: 'block', marginBottom: '8px' }}>
     Filtrar cierres por fecha
   </label>
@@ -2931,7 +2934,7 @@ onClick={() => setSeccionActiva('dashboard')}
 )}
 
 {seccionActiva === 'calendario' && (
-  <section className="panel" style={{ marginTop: '24px' }}>
+<section className="panel calendar-section" style={{ marginTop: '24px' }}>
     <div className="panel-heading">
       <div>
         <h3>Calendario de {negocioSeleccionado?.nombre}</h3>
@@ -2946,11 +2949,14 @@ onClick={() => setSeccionActiva('dashboard')}
       </button>
     </div>
 
-    <div style={{ marginBottom: '24px' }}>
-      <label style={{ display: 'block', marginBottom: '8px' }}>
-        Seleccioná una fecha
-      </label>
+<div className="calendar-toolbar">
+  <div className="calendar-date-filter">
+    <div className="calendar-filter-label">
+      <span>◷</span>
+      <label>Filtrar por fecha</label>
+    </div>
 
+    <div className="calendar-filter-controls">
       <input
         type="date"
         value={fechaCalendario}
@@ -2959,25 +2965,25 @@ onClick={() => setSeccionActiva('dashboard')}
 
       <button
         className="secondary-button"
-        style={{ marginLeft: '10px' }}
         onClick={() => setFechaCalendario('')}
       >
         Ver todas
       </button>
     </div>
+  </div>
 
-    <div className="stats-grid">
-      <div className="stat-card">
-        <div className="stat-top">
-          <span>Reservas encontradas</span>
-        </div>
-        <h3>
-          {reservas.filter((r) =>
-            !fechaCalendario || r.fecha === fechaCalendario
-          ).length}
-        </h3>
-      </div>
+  <div className="calendar-total-card">
+    <span className="calendar-total-icon">▦</span>
+    <div>
+      <p>Reservas encontradas</p>
+      <h3>
+        {reservas.filter((r) =>
+          !fechaCalendario || r.fecha === fechaCalendario
+        ).length}
+      </h3>
     </div>
+  </div>
+</div>
 
     <div className="table-wrap" style={{ marginTop: '24px' }}>
       <table>
@@ -3049,10 +3055,24 @@ onClick={() => setSeccionActiva('dashboard')}
       </button>
     </div>
 
-<div className="form-grid" ref={formularioServiciosRef}>
+<div className="services-form" ref={formularioServiciosRef}>
+
+  <div className="services-form-heading">
+    <div>
+      <span>GESTIÓN DE SERVICIOS</span>
+      <h3>{servicioEditando ? 'Editar servicio' : 'Agregar nuevo servicio'}</h3>
+      <p>Completá los datos para registrar tu servicio.</p>
+    </div>
+    <div className="services-form-icon">✂</div>
+  </div>
+
+  <div className="services-form-fields">
+
+    <div className="services-field">
+      <label>Nombre del servicio</label>
       <input
         type="text"
-        placeholder="Nombre del servicio"
+        placeholder="Ej. Corte de cabello"
         value={nuevoServicio.nombre}
         onChange={(e) =>
           setNuevoServicio({
@@ -3061,10 +3081,13 @@ onClick={() => setSeccionActiva('dashboard')}
           })
         }
       />
+    </div>
 
+    <div className="services-field">
+      <label>Precio en guaraníes</label>
       <input
         type="number"
-        placeholder="Precio en guaraníes"
+        placeholder="Ej. 50000"
         value={nuevoServicio.precio}
         onChange={(e) =>
           setNuevoServicio({
@@ -3073,61 +3096,67 @@ onClick={() => setSeccionActiva('dashboard')}
           })
         }
       />
-
-
-
-  <button
-  className="primary-button"
-  onClick={registrarServicio}
->
-  {servicioEditando ? 'Guardar cambios' : 'Agregar servicio'}
-</button>
     </div>
 
-    <div className="table-wrap" style={{ marginTop: '24px' }}>
-      <table>
-        <thead>
-          <tr>
-            <th>SERVICIO</th>
-            <th>PRECIO</th>
-            <th>DURACIÓN</th>
-            <th>ACCIONES</th>
-          </tr>
-        </thead>
+    <button
+      className="primary-button services-submit"
+      onClick={registrarServicio}
+    >
+      {servicioEditando ? 'Guardar cambios' : '+ Agregar servicio'}
+    </button>
 
-        <tbody>
-          {servicios.map((servicio) => (
-            <tr key={servicio.id}>
-              <td><strong>{servicio.nombre}</strong></td>
-              <td>Gs. {Number(servicio.precio).toLocaleString('es-PY')}</td>
-<td>{servicio.duracion} minutos</td>
-<td>
-  <button
-    className="secondary-button"
-onClick={() => prepararEdicionServicio(servicio)}
-  >
-    Editar
-  </button>
+  </div>
+</div>
 
-  <button
-    className="secondary-button"
-    style={{ color: '#ff5555', marginLeft: '8px' }}
-    onClick={() => eliminarServicio(servicio.id)}
-  >
-    Eliminar
-  </button>
-</td>
-            </tr>
-          ))}
+    <div className="services-cards-grid">
+  {servicios.map((servicio) => (
+    <div className="service-card" key={servicio.id}>
+      <div className="service-card-top">
+        <div className="service-card-icon">✂</div>
+        <span className="service-card-label">SERVICIO</span>
+      </div>
 
-          {servicios.length === 0 && (
-            <tr>
-              <td colSpan="4">Todavía no hay servicios registrados.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <h3>{servicio.nombre}</h3>
+
+      <div className="service-card-details">
+        <div>
+          <span>PRECIO</span>
+          <strong>
+            Gs. {Number(servicio.precio).toLocaleString('es-PY')}
+          </strong>
+        </div>
+
+        <div>
+          <span>DURACIÓN</span>
+          <strong>{servicio.duracion} minutos</strong>
+        </div>
+      </div>
+
+      <div className="service-card-actions">
+        <button
+          className="secondary-button"
+          onClick={() => prepararEdicionServicio(servicio)}
+        >
+          ✎ Editar
+        </button>
+
+        <button
+          className="secondary-button"
+          style={{ color: '#ff5555' }}
+          onClick={() => eliminarServicio(servicio.id)}
+        >
+          Eliminar
+        </button>
+      </div>
     </div>
+  ))}
+
+  {servicios.length === 0 && (
+    <p className="services-empty">
+      Todavía no hay servicios registrados.
+    </p>
+  )}
+</div>
     </section>
   </>
 )}
@@ -3170,39 +3199,41 @@ onClick={() => setSeccionActiva('dashboard')}
   </div>
 
 </div>
-    <div style={{ marginBottom: '20px' }}>
-  <label style={{ display: 'block', marginBottom: '8px' }}>
-    Filtrar reservas por fecha
-  </label>
+<div className="reservations-filters">
 
-  <input
-    type="date"
-    value={fechaFiltro}
-    onChange={(e) => setFechaFiltro(e.target.value)}
-  />
+  <div className="reservation-filter-card">
+    <label>⌖ Filtrar por fecha</label>
 
-  <button
-    className="secondary-button"
-    style={{ marginLeft: '10px' }}
-    onClick={() => setFechaFiltro('')}
-  >
-    Ver todas
-  </button>
-</div>
-<div style={{ marginTop: '15px' }}>
-  <label style={{ display: 'block', marginBottom: '8px' }}>
-    Filtrar por estado
-  </label>
+    <div className="reservation-filter-control">
+      <input
+        type="date"
+        value={fechaFiltro}
+        onChange={(e) => setFechaFiltro(e.target.value)}
+      />
 
-  <select
-    value={estadoFiltro}
-    onChange={(e) => setEstadoFiltro(e.target.value)}
-  >
-    <option value="Todas">Todas</option>
-    <option value="Pendiente">Pendientes</option>
-    <option value="Confirmada">Confirmadas</option>
-    <option value="Cancelada">Canceladas</option>
-  </select>
+      <button
+        className="secondary-button"
+        onClick={() => setFechaFiltro('')}
+      >
+        Ver todas
+      </button>
+    </div>
+  </div>
+
+  <div className="reservation-filter-card">
+    <label>◷ Filtrar por estado</label>
+
+    <select
+      value={estadoFiltro}
+      onChange={(e) => setEstadoFiltro(e.target.value)}
+    >
+      <option value="Todas">Todas</option>
+      <option value="Pendiente">Pendientes</option>
+      <option value="Confirmada">Confirmadas</option>
+      <option value="Cancelada">Canceladas</option>
+    </select>
+  </div>
+
 </div>
     {reservaEditando && (
   <div className="panel" style={{ marginBottom: '24px' }}>
@@ -3285,177 +3316,182 @@ onClick={() => setSeccionActiva('dashboard')}
     </div>
   </div>
 )}
-    <div className="table-wrap">
+ 
+<div className="table-wrap reservations-table-wrap">
 
-<div style={{ marginBottom: '18px' }}>
-  <input
-    type="text"
-    placeholder="Buscar por código, cliente o WhatsApp..."
-    value={busquedaReserva}
-    onChange={(e) => setBusquedaReserva(e.target.value)}
-    style={{
-      width: '100%',
-      maxWidth: '420px',
-      padding: '12px 15px',
-      borderRadius: '10px',
-      border: '1px solid #333',
-      background: '#151515',
-      color: '#fff'
-    }}
-  />
+  <div className="reservations-search">
+    <span>⌕</span>
+    <input
+      type="text"
+      placeholder="Buscar por código, cliente o WhatsApp..."
+      value={busquedaReserva}
+      onChange={(e) => setBusquedaReserva(e.target.value)}
+    />
+  </div>
+
+  <div className="reservations-table-scroll">
+    <table className="reservations-table">
+      <thead>
+        <tr>
+          <th>CÓDIGO</th>
+          <th>CLIENTE</th>
+          <th>WHATSAPP</th>
+          <th>SERVICIO</th>
+          <th>PRECIO</th>
+          <th>DURACIÓN</th>
+          <th>FECHA</th>
+          <th>HORA</th>
+          <th>ESTADO</th>
+          <th>ACCIONES</th>
+          <th>COBRO</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {reservasFiltradas.map((reserva) => (
+          <tr key={reserva.id}>
+
+            <td>
+              <div className="reservation-code">
+                <strong>#{reserva.id}</strong>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`#${reserva.id}`)
+                      .then(() => alert('¡Código copiado!'))
+                      .catch(() => alert('No se pudo copiar el código.'))
+                  }}
+                >
+                  Copiar
+                </button>
+              </div>
+            </td>
+
+            <td>
+              <strong>{reserva.cliente_nombre}</strong>
+            </td>
+
+            <td>
+              <a
+                className="reservation-whatsapp"
+                href={`https://wa.me/${reserva.cliente_whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Hola ' + reserva.cliente_nombre + ', te contactamos por tu reserva del ' + reserva.fecha + ' a las ' + reserva.hora + '.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Contactar ↗
+              </a>
+            </td>
+
+            <td>{reserva.servicios?.nombre || 'Sin servicio'}</td>
+
+            <td>
+              <strong>
+                Gs. {Number(reserva.servicios?.precio || 0).toLocaleString('es-PY')}
+              </strong>
+            </td>
+
+            <td>{reserva.servicios?.duracion || 0} min</td>
+
+            <td>{reserva.fecha}</td>
+
+            <td>{reserva.hora}</td>
+
+            <td>
+              <span className={`reservation-status ${
+                reserva.estado === 'Confirmada'
+                  ? 'status-confirmed'
+                  : reserva.estado === 'Cancelada'
+                  ? 'status-cancelled'
+                  : 'status-pending'
+              }`}>
+                {reserva.estado}
+              </span>
+            </td>
+
+            <td>
+              <div className="reservation-actions">
+
+                {reserva.estado === 'Pendiente' && (
+                  <button
+                    className="reservation-action-confirm"
+                    onClick={() => actualizarEstadoReserva(reserva, 'Confirmada')}
+                  >
+                    Confirmar
+                  </button>
+                )}
+
+                {reserva.estado !== 'Cancelada' && (
+                  <button
+                    className="reservation-action-cancel"
+                    onClick={() => actualizarEstadoReserva(reserva, 'Cancelada')}
+                  >
+                    Cancelar
+                  </button>
+                )}
+
+                <button
+                  className="reservation-action-edit"
+                  onClick={() => prepararEdicionReserva(reserva)}
+                >
+                  Editar
+                </button>
+
+                <button
+                  className="reservation-action-delete"
+                  onClick={() => eliminarReserva(reserva.id)}
+                >
+                  Eliminar
+                </button>
+
+              </div>
+            </td>
+
+            <td>
+              {reserva.estado === 'Confirmada' ? (
+                movimientosDashboard.some(
+                  (movimiento) =>
+                    String(movimiento.reserva_id) === String(reserva.id)
+                ) ? (
+                  <span className="reservation-paid">✓ Cobrado</span>
+                ) : (
+                  <button
+                    className="reservation-action-payment"
+                    onClick={() => registrarCobroReserva(reserva)}
+                  >
+                    Registrar cobro
+                  </button>
+                )
+              ) : (
+                <span className="reservation-no-payment">—</span>
+              )}
+            </td>
+
+          </tr>
+        ))}
+
+        {reservasFiltradas.length === 0 && (
+          <tr>
+            <td colSpan="11" className="reservations-empty">
+              Todavía no hay reservas registradas.
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
-      <table>
-<thead>
-  <tr>
-    <th>CÓDIGO</th>
-    <th>CLIENTE</th>
-    <th>WHATSAPP</th>
-    <th>SERVICIO</th>
-    <th>PRECIO</th>
-    <th>DURACIÓN</th>
-    <th>FECHA</th>
-    <th>HORA</th>
-  </tr>
-</thead>
-
-        <tbody>
-{reservasFiltradas.map((reserva) => (
-            <tr key={reserva.id}>
-
-<td>
-  <strong>#{reserva.id}</strong>
-  <button
-    type="button"
-    onClick={() => {
-      navigator.clipboard.writeText(`#${reserva.id}`)
-        .then(() => alert('¡Código copiado!'))
-        .catch(() => alert('No se pudo copiar el código.'))
-    }}
-    style={{
-      marginLeft: '8px',
-      padding: '5px 9px',
-      borderRadius: '6px',
-      cursor: 'pointer'
-    }}
-  >
-    Copiar
-  </button>
-</td>
-
-              <td>{reserva.cliente_nombre}</td>
-<td>
-  <a
-href={`https://wa.me/${reserva.cliente_whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Hola ' + reserva.cliente_nombre + ', te contactamos por tu reserva del ' + reserva.fecha + ' a las ' + reserva.hora + '.')}`}
-    target="_blank"
-    rel="noopener noreferrer"
-    style={{ color: '#a78bfa' }}
-  >
-    Contactar
-  </a>
-</td>
-<td>{reserva.servicios?.nombre || 'Sin servicio'}</td>
-
-<td>
-  Gs. {Number(reserva.servicios?.precio || 0).toLocaleString('es-PY')}
-</td>
-
-<td>
-  {reserva.servicios?.duracion || 0} minutos
-</td>
-              <td>{reserva.fecha}</td>
-              <td>{reserva.hora}</td>
-<td>
-<span
-  style={{
-    color:
-      reserva.estado === 'Confirmada'
-        ? '#22c55e'
-        : reserva.estado === 'Cancelada'
-        ? '#ff5555'
-        : '#f59e0b',
-    fontWeight: '600'
-  }}
->
-  {reserva.estado}
-</span>
-
-  {reserva.estado === 'Pendiente' && (
-    <button
-      className="primary-button"
-      style={{ marginLeft: '8px' }}
-      onClick={() =>
-        actualizarEstadoReserva(reserva, 'Confirmada')
-      }
-    >
-      Confirmar
-    </button>
-  )}
-
-  {reserva.estado !== 'Cancelada' && (
-    <button
-      className="secondary-button"
-      style={{ marginLeft: '8px', color: '#ff5555' }}
-      onClick={() =>
-        actualizarEstadoReserva(reserva, 'Cancelada')
-      }
-    >
-      Cancelar
-    </button>
-  )}
-  <button
-  className="secondary-button"
-  onClick={() => prepararEdicionReserva(reserva)}
->
-  Editar
-</button>
-  <button
-  className="secondary-button"
-  onClick={() => eliminarReserva(reserva.id)}
->
-  Eliminar
-</button>
-</td>
-{reserva.estado === 'Confirmada' && (
-  movimientosDashboard.some(
-    (movimiento) =>
-      String(movimiento.reserva_id) === String(reserva.id)
-  ) ? (
-    <span style={{ color: '#22c55e', marginLeft: '8px' }}>
-      ✓ Cobrado
-    </span>
-  ) : (
-    <button
-      className="primary-button"
-      style={{ marginLeft: '8px' }}
-      onClick={() => registrarCobroReserva(reserva)}
-    >
-      Registrar cobro
-    </button>
-  )
-)}
-            </tr>
-          ))}
-
-{reservasFiltradas.length === 0 && (
-            <tr>
-              <td colSpan="8">
-                Todavía no hay reservas registradas.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
   </section>
 )}
 
 {seccionActiva === 'negocio' && (
-  <section className="panel" style={{ marginTop: '24px' }}>
-    <div className="panel-heading">
+  <section className="business-profile">
+    <div className="business-profile-heading">
       <div>
-        <h3>Mi negocio</h3>
-        <p>Administrá la información de tu establecimiento</p>
+        <span className="business-profile-eyebrow">INFORMACIÓN GENERAL</span>
+        <h2>Mi negocio</h2>
+        <p>Administrá y consultá la información de tu establecimiento.</p>
       </div>
 
       {negocios[0] && (
@@ -3469,47 +3505,81 @@ href={`https://wa.me/${reserva.cliente_whatsapp.replace(/\D/g, '')}?text=${encod
     </div>
 
     {negocios[0] ? (
-      <div className="stats-grid">
-        <div className="stat-card">
-          <p>Nombre del negocio</p>
-          <h3>{negocios[0].nombre}</h3>
+      <>
+        <div className="business-profile-hero">
+          <div className="business-profile-logo">
+            {(negocios[0].nombre || 'N').charAt(0).toUpperCase()}
+          </div>
+
+          <div className="business-profile-identity">
+            <span>ESTABLECIMIENTO</span>
+            <h2>{negocios[0].nombre}</h2>
+            <p>{negocios[0].tipo || 'Tipo de negocio no especificado'}</p>
+          </div>
+
+          <div className="business-profile-status">
+            <span></span>
+            Negocio registrado
+          </div>
         </div>
 
-        <div className="stat-card">
-          <p>Propietario</p>
-          <h3>{negocios[0].propietario}</h3>
+        <div className="business-profile-section-title">
+          <div>
+            <h3>Datos del establecimiento</h3>
+            <p>Información principal de tu negocio</p>
+          </div>
         </div>
 
-        <div className="stat-card">
-          <p>Tipo de negocio</p>
-          <h3>{negocios[0].tipo}</h3>
-        </div>
+        <div className="business-profile-grid">
+          <div className="business-info-card">
+            <span className="business-info-icon">♙</span>
+            <div>
+              <span>Propietario</span>
+              <h3>{negocios[0].propietario || 'No especificado'}</h3>
+            </div>
+          </div>
 
-        <div className="stat-card">
-          <p>WhatsApp</p>
-          <h3>{negocios[0].whatsapp}</h3>
-        </div>
+          <div className="business-info-card">
+            <span className="business-info-icon">▣</span>
+            <div>
+              <span>WhatsApp de contacto</span>
+              <h3>{negocios[0].whatsapp || 'No especificado'}</h3>
+            </div>
+          </div>
 
-        <div className="stat-card">
-          <p>Dirección</p>
-          <h3>{negocios[0].direccion || 'No especificada'}</h3>
-        </div>
+          <div className="business-info-card">
+            <span className="business-info-icon">⌖</span>
+            <div>
+              <span>Dirección</span>
+              <h3>{negocios[0].direccion || 'No especificada'}</h3>
+            </div>
+          </div>
 
-        <div className="stat-card">
-          <p>Horario de atención</p>
-          <h3>
-            {negocios[0].hora_apertura || '--:--'} a{' '}
-            {negocios[0].hora_cierre || '--:--'}
-          </h3>
-        </div>
+          <div className="business-info-card">
+            <span className="business-info-icon">◷</span>
+            <div>
+              <span>Horario de atención</span>
+              <h3>
+                {negocios[0].hora_apertura || '--:--'} a{' '}
+                {negocios[0].hora_cierre || '--:--'}
+              </h3>
+            </div>
+          </div>
 
-        <div className="stat-card">
-          <p>Días de atención</p>
-          <h3>{negocios[0].dias_atencion || 'No especificados'}</h3>
+          <div className="business-info-card business-info-card-wide">
+            <span className="business-info-icon">▦</span>
+            <div>
+              <span>Días de atención</span>
+              <h3>{negocios[0].dias_atencion || 'No especificados'}</h3>
+            </div>
+          </div>
         </div>
-      </div>
+      </>
     ) : (
-      <p>No se encontró información de tu negocio.</p>
+      <div className="business-profile-empty">
+        <h3>No se encontró información</h3>
+        <p>Todavía no hay un negocio asociado a tu cuenta.</p>
+      </div>
     )}
   </section>
 )}
