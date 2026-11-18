@@ -1,5 +1,6 @@
 
 import './App.css'
+import verzixLogo from './assets/verzix-logo.png'
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from './supabase'
 import PaginaNegocio from './PaginaNegocio'
@@ -1941,7 +1942,7 @@ return (
 >
         <div className="brand">
 <img
-  src="/src/assets/verzix-logo.png"
+src={verzixLogo}
   alt="VERZIX"
   className="brand-logo"
 />
