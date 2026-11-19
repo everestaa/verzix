@@ -28,6 +28,27 @@ const [passwordPropietario, setPasswordPropietario] = useState('')
   const [reservasDashboard, setReservasDashboard] = useState([])
   const [movimientosDashboard, setMovimientosDashboard] = useState([])
   const [servicios, setServicios] = useState([])
+  // GESTIÓN DE PROFESIONALES
+const [profesionales, setProfesionales] = useState([])
+const [profesionalEditando, setProfesionalEditando] = useState(null)
+const [mostrarFormularioProfesional, setMostrarFormularioProfesional] = useState(false)
+
+const [nuevoProfesional, setNuevoProfesional] = useState({
+  nombre: '',
+  especialidad: '',
+  foto_url: '',
+  activo: true
+})
+
+const [fotoProfesional, setFotoProfesional] = useState(null)
+const [serviciosAsignados, setServiciosAsignados] = useState([])
+const [horariosProfesional, setHorariosProfesional] = useState([])
+const [ausenciasProfesional, setAusenciasProfesional] = useState([])
+const [nuevaAusencia, setNuevaAusencia] = useState({
+  fecha_inicio: '',
+  fecha_fin: '',
+  motivo: ''
+})
   const [reservas, setReservas] = useState([])
   const [busquedaReserva, setBusquedaReserva] = useState('')
   const [mostrarReservas, setMostrarReservas] = useState(false)
@@ -543,6 +564,263 @@ const cargarServicios = async (negocio) => {
   setMostrarServicios(true)
 }
 
+
+const cargarProfesionales = async (negocio) => {
+  if (!negocio) return
+
+  const [profesionalesData, serviciosData] = await Promise.all([
+    supabase
+      .from('profesionales')
+      .select('*')
+      .eq('negocio_id', negocio.id)
+      .order('id', { ascending: true }),
+
+    supabase
+      .from('servicios')
+      .select('*')
+      .eq('negocio_id', negocio.id)
+      .order('created_at', { ascending: false })
+  ])
+
+  if (profesionalesData.error) {
+    alert('Error al cargar profesionales: ' + profesionalesData.error.message)
+    return
+  }
+
+  if (serviciosData.error) {
+    alert('Error al cargar servicios: ' + serviciosData.error.message)
+    return
+  }
+
+  setProfesionales(profesionalesData.data || [])
+  setServicios(serviciosData.data || [])
+  setNegocioSeleccionado(negocio)
+  setMostrarServicios(false)
+  setMostrarReservas(false)
+  setMostrarCalendario(false)
+  setMostrarFormularioProfesional(false)
+  setSeccionActiva('profesionales')
+}
+
+const editarProfesional = async (profesional) => {
+  setProfesionalEditando(profesional)
+
+  setNuevoProfesional({
+    nombre: profesional.nombre || '',
+    especialidad: profesional.especialidad || '',
+    foto_url: profesional.foto_url || '',
+    activo: profesional.activo ?? true
+  })
+
+  setFotoProfesional(null)
+
+  const [serviciosData, asignadosData, horariosData, ausenciasData] =
+    await Promise.all([
+      supabase
+        .from('servicios')
+        .select('*')
+        .eq('negocio_id', profesional.negocio_id),
+
+      supabase
+        .from('profesional_servicios')
+        .select('*')
+        .eq('profesional_id', profesional.id),
+
+      supabase
+        .from('profesional_horarios')
+        .select('*')
+        .eq('profesional_id', profesional.id),
+
+      supabase
+        .from('profesional_ausencias')
+        .select('*')
+        .eq('profesional_id', profesional.id)
+    ])
+
+  if (
+    serviciosData.error ||
+    asignadosData.error ||
+    horariosData.error ||
+    ausenciasData.error
+  ) {
+    alert('Error al cargar los datos del profesional.')
+    return
+  }
+
+  setServicios(serviciosData.data || [])
+  setServiciosAsignados(
+    (asignadosData.data || []).map(item => item.servicio_id)
+  )
+  setHorariosProfesional(horariosData.data || [])
+  setAusenciasProfesional(ausenciasData.data || [])
+  setMostrarFormularioProfesional(true)
+}
+const guardarProfesional = async () => {
+  if (!nuevoProfesional.nombre.trim()) {
+    alert('Ingresá el nombre del profesional.')
+    return
+  }
+
+  if (!negocioSeleccionado) {
+    alert('No se encontró el negocio.')
+    return
+  }
+
+  let fotoUrl = nuevoProfesional.foto_url
+
+  // Subir foto si se seleccionó una
+  if (fotoProfesional) {
+    const extension = fotoProfesional.name.split('.').pop()
+    const nombreArchivo = `${Date.now()}.${extension}`
+    const rutaFoto = `${negocioSeleccionado.id}/${nombreArchivo}`
+
+    const { error: errorFoto } = await supabase.storage
+      .from('fotos-profesionales')
+      .upload(rutaFoto, fotoProfesional, { upsert: true })
+
+    if (errorFoto) {
+      alert('Error al subir la foto: ' + errorFoto.message)
+      return
+    }
+
+    const { data: urlData } = supabase.storage
+      .from('fotos-profesionales')
+      .getPublicUrl(rutaFoto)
+
+    fotoUrl = urlData.publicUrl
+  }
+
+  const datosProfesional = {
+    negocio_id: negocioSeleccionado.id,
+    nombre: nuevoProfesional.nombre.trim(),
+    especialidad: nuevoProfesional.especialidad.trim(),
+    foto_url: fotoUrl,
+    activo: nuevoProfesional.activo
+  }
+
+  let profesionalGuardado
+  let errorProfesional
+
+  if (profesionalEditando) {
+    const resultado = await supabase
+      .from('profesionales')
+      .update(datosProfesional)
+      .eq('id', profesionalEditando.id)
+      .select()
+      .single()
+
+    profesionalGuardado = resultado.data
+    errorProfesional = resultado.error
+  } else {
+    const resultado = await supabase
+      .from('profesionales')
+      .insert(datosProfesional)
+      .select()
+      .single()
+
+    profesionalGuardado = resultado.data
+    errorProfesional = resultado.error
+  }
+
+  if (errorProfesional) {
+    alert('Error al guardar profesional: ' + errorProfesional.message)
+    return
+  }
+
+  const { error: errorEliminar } = await supabase
+    .from('profesional_servicios')
+    .delete()
+    .eq('profesional_id', profesionalGuardado.id)
+
+  if (errorEliminar) {
+    alert('Error al actualizar los servicios: ' + errorEliminar.message)
+    return
+  }
+
+  if (serviciosAsignados.length > 0) {
+    const relaciones = serviciosAsignados.map(servicioId => ({
+      profesional_id: profesionalGuardado.id,
+      servicio_id: servicioId
+    }))
+
+    const { error: errorAsignar } = await supabase
+      .from('profesional_servicios')
+      .insert(relaciones)
+
+    if (errorAsignar) {
+      alert('Error al asignar servicios: ' + errorAsignar.message)
+      return
+    }
+  }
+
+  // Guardar horarios del profesional
+  const { error: errorEliminarHorarios } = await supabase
+    .from('profesional_horarios')
+    .delete()
+    .eq('profesional_id', profesionalGuardado.id)
+
+  if (errorEliminarHorarios) {
+    alert('Error al actualizar horarios: ' + errorEliminarHorarios.message)
+    return
+  }
+
+  const horariosParaGuardar = horariosProfesional.map(horario => ({
+    profesional_id: profesionalGuardado.id,
+    dia_semana: Number(horario.dia_semana),
+    hora_inicio: horario.hora_inicio,
+    hora_fin: horario.hora_fin,
+    activo: horario.activo
+  }))
+
+  if (horariosParaGuardar.length > 0) {
+    const { error: errorGuardarHorarios } = await supabase
+      .from('profesional_horarios')
+      .insert(horariosParaGuardar)
+
+    if (errorGuardarHorarios) {
+      alert('Error al guardar horarios: ' + errorGuardarHorarios.message)
+      return
+    }
+  }
+
+  alert('¡Profesional guardado correctamente!')
+
+  setProfesionalEditando(null)
+  setMostrarFormularioProfesional(false)
+  setFotoProfesional(null)
+
+  setNuevoProfesional({
+    nombre: '',
+    especialidad: '',
+    foto_url: '',
+    activo: true
+  })
+
+  cargarProfesionales(negocioSeleccionado)
+}
+const crearProfesional = () => {
+  setProfesionalEditando(null)
+
+  setNuevoProfesional({
+    nombre: '',
+    especialidad: '',
+    foto_url: '',
+    activo: true
+  })
+
+  setFotoProfesional(null)
+  setServiciosAsignados([])
+setHorariosProfesional(
+  Array.from({ length: 7 }, (_, dia) => ({
+    dia_semana: dia,
+    hora_inicio: '09:00',
+    hora_fin: '18:00',
+    activo: dia >= 1 && dia <= 6
+  }))
+)
+  setAusenciasProfesional([])
+  setMostrarFormularioProfesional(true)
+}
 const cargarReservas = async (negocio) => {
   const { data, error } = await supabase
     .from('reservas')
@@ -2044,7 +2322,21 @@ src={verzixLogo}
       >
         <span>▤</span> Mis reservas
       </a>
+      <a
+        href="#"
+        className={`nav-item ${seccionActiva === 'profesionales' ? 'active' : ''}`}
+        onClick={(e) => {
+          e.preventDefault()
 
+          if (negocios[0]) {
+            cargarProfesionales(negocios[0])
+          } else {
+            alert('Todavía no tenés un negocio asignado.')
+          }
+        }}
+      >
+        <span>♙</span> Profesionales
+      </a>
       <a
         href="#"
         className={`nav-item ${seccionActiva === 'servicios' ? 'active' : ''}`}
@@ -3161,6 +3453,413 @@ onClick={() => setSeccionActiva('dashboard')}
     </section>
   </>
 )}
+
+{seccionActiva === 'profesionales' && (
+  <section className="panel" style={{ marginTop: '24px' }}>
+    <div className="panel-heading">
+      <div>
+        <h3>Profesionales de {negocioSeleccionado?.nombre}</h3>
+        <p>Administrá tu equipo de trabajo</p>
+      </div>
+
+      <button
+        className="primary-button"
+        onClick={crearProfesional}
+      >
+        + Agregar profesional
+      </button>
+    </div>
+
+    {mostrarFormularioProfesional && (
+      <div className="panel" style={{ marginTop: '24px' }}>
+        <h3>
+          {profesionalEditando
+            ? 'Editar profesional'
+            : 'Nuevo profesional'}
+        </h3>
+
+        <div className="form-grid">
+          <input
+            type="text"
+            placeholder="Nombre del profesional"
+            value={nuevoProfesional.nombre}
+            onChange={(e) =>
+              setNuevoProfesional({
+                ...nuevoProfesional,
+                nombre: e.target.value
+              })
+            }
+          />
+
+          <input
+            type="text"
+            placeholder="Especialidad"
+            value={nuevoProfesional.especialidad}
+            onChange={(e) =>
+              setNuevoProfesional({
+                ...nuevoProfesional,
+                especialidad: e.target.value
+              })
+            }
+          />
+
+          <label>
+            Foto del profesional
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setFotoProfesional(e.target.files?.[0] || null)
+              }
+            />
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              checked={nuevoProfesional.activo}
+              onChange={(e) =>
+                setNuevoProfesional({
+                  ...nuevoProfesional,
+                  activo: e.target.checked
+                })
+              }
+            />
+            Profesional activo
+          </label>
+        </div>
+
+        <h3 style={{ marginTop: '24px' }}>Servicios que realiza</h3>
+
+        {servicios.length === 0 ? (
+          <p>Todavía no hay servicios disponibles.</p>
+        ) : (
+          <div>
+            {servicios.map((servicio) => (
+              <label
+                key={servicio.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginBottom: '12px'
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={serviciosAsignados.includes(servicio.id)}
+                  onChange={(e) => {
+                    setServiciosAsignados((actuales) =>
+                      e.target.checked
+                        ? [...actuales, servicio.id]
+                        : actuales.filter(id => id !== servicio.id)
+                    )
+                  }}
+                />
+                {servicio.nombre} - Gs. {Number(servicio.precio).toLocaleString('es-PY')}
+              </label>
+            ))}
+          </div>
+        )}
+
+<h3 style={{ marginTop: '28px' }}>Horarios de atención</h3>
+
+{['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'].map((dia, index) => {
+  const horario = horariosProfesional.find(
+    item => Number(item.dia_semana) === index
+  )
+
+  return (
+    <div
+      key={index}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '110px 90px 1fr 1fr',
+        gap: '12px',
+        alignItems: 'center',
+        marginBottom: '12px'
+      }}
+    >
+      <strong>{dia}</strong>
+
+      <label>
+        <input
+          type="checkbox"
+          checked={horario?.activo || false}
+          onChange={(e) => {
+            setHorariosProfesional(actuales => {
+              const otros = actuales.filter(
+                item => Number(item.dia_semana) !== index
+              )
+
+              return [
+                ...otros,
+                {
+                  dia_semana: index,
+                  hora_inicio: horario?.hora_inicio || '09:00',
+                  hora_fin: horario?.hora_fin || '18:00',
+                  activo: e.target.checked
+                }
+              ]
+            })
+          }}
+        />
+        Activo
+      </label>
+
+      <input
+        type="time"
+        value={horario?.hora_inicio || '09:00'}
+        disabled={!horario?.activo}
+        onChange={(e) => {
+          setHorariosProfesional(actuales => {
+            const otros = actuales.filter(
+              item => Number(item.dia_semana) !== index
+            )
+
+            return [
+              ...otros,
+              {
+                dia_semana: index,
+                hora_inicio: e.target.value,
+                hora_fin: horario?.hora_fin || '18:00',
+                activo: true
+              }
+            ]
+          })
+        }}
+      />
+
+      <input
+        type="time"
+        value={horario?.hora_fin || '18:00'}
+        disabled={!horario?.activo}
+        onChange={(e) => {
+          setHorariosProfesional(actuales => {
+            const otros = actuales.filter(
+              item => Number(item.dia_semana) !== index
+            )
+
+            return [
+              ...otros,
+              {
+                dia_semana: index,
+                hora_inicio: horario?.hora_inicio || '09:00',
+                hora_fin: e.target.value,
+                activo: true
+              }
+            ]
+          })
+        }}
+      />
+    </div>
+  )
+})}
+
+<h3 style={{ marginTop: '28px' }}>Ausencias y días libres</h3>
+
+<div className="form-grid">
+  <div>
+    <label>Desde</label>
+    <input
+      type="date"
+      value={nuevaAusencia.fecha_inicio}
+      onChange={(e) =>
+        setNuevaAusencia({
+          ...nuevaAusencia,
+          fecha_inicio: e.target.value
+        })
+      }
+    />
+  </div>
+
+  <div>
+    <label>Hasta</label>
+    <input
+      type="date"
+      value={nuevaAusencia.fecha_fin}
+      onChange={(e) =>
+        setNuevaAusencia({
+          ...nuevaAusencia,
+          fecha_fin: e.target.value
+        })
+      }
+    />
+  </div>
+
+  <input
+    type="text"
+    placeholder="Motivo (vacaciones, permiso...)"
+    value={nuevaAusencia.motivo}
+    onChange={(e) =>
+      setNuevaAusencia({
+        ...nuevaAusencia,
+        motivo: e.target.value
+      })
+    }
+  />
+</div>
+
+<button
+  type="button"
+  className="secondary-button"
+  style={{ marginTop: '12px' }}
+  onClick={async () => {
+    if (!nuevaAusencia.fecha_inicio || !nuevaAusencia.fecha_fin) {
+      alert('Seleccioná las dos fechas.')
+      return
+    }
+
+    if (nuevaAusencia.fecha_fin < nuevaAusencia.fecha_inicio) {
+      alert('La fecha final no puede ser anterior a la inicial.')
+      return
+    }
+
+    if (!profesionalEditando) {
+      alert('Primero guardá el profesional. Después podrás registrar sus ausencias.')
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('profesional_ausencias')
+      .insert({
+        profesional_id: profesionalEditando.id,
+        fecha_inicio: nuevaAusencia.fecha_inicio,
+        fecha_fin: nuevaAusencia.fecha_fin,
+        motivo: nuevaAusencia.motivo
+      })
+      .select()
+      .single()
+
+    if (error) {
+      alert('Error al registrar ausencia: ' + error.message)
+      return
+    }
+
+    setAusenciasProfesional(actuales => [...actuales, data])
+
+    setNuevaAusencia({
+      fecha_inicio: '',
+      fecha_fin: '',
+      motivo: ''
+    })
+
+    alert('Ausencia registrada correctamente.')
+  }}
+>
+  + Registrar ausencia
+</button>
+
+<div style={{ marginTop: '16px' }}>
+  {ausenciasProfesional.map(ausencia => (
+    <div
+      key={ausencia.id}
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: '12px',
+        marginBottom: '10px'
+      }}
+    >
+      <span>
+        {ausencia.fecha_inicio} al {ausencia.fecha_fin}
+        {' — '}
+        {ausencia.motivo || 'Sin motivo'}
+      </span>
+
+      <button
+        type="button"
+        className="secondary-button"
+        onClick={async () => {
+          const { error } = await supabase
+            .from('profesional_ausencias')
+            .delete()
+            .eq('id', ausencia.id)
+
+          if (error) {
+            alert('Error al eliminar ausencia: ' + error.message)
+            return
+          }
+
+          setAusenciasProfesional(actuales =>
+            actuales.filter(item => item.id !== ausencia.id)
+          )
+        }}
+      >
+        Eliminar
+      </button>
+    </div>
+  ))}
+</div>
+
+        <div style={{
+          display: 'flex',
+          gap: '12px',
+          marginTop: '24px',
+          flexWrap: 'wrap'
+        }}>
+          <button
+            className="primary-button"
+            onClick={guardarProfesional}
+          >
+            Guardar profesional
+          </button>
+
+          <button
+            className="secondary-button"
+            onClick={() => {
+              setMostrarFormularioProfesional(false)
+              setProfesionalEditando(null)
+            }}
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    )}
+
+    <div className="services-cards-grid" style={{ marginTop: '24px' }}>
+      {profesionales.map((profesional) => (
+        <div className="service-card" key={profesional.id}>
+          {profesional.foto_url && (
+            <img
+              src={profesional.foto_url}
+              alt={profesional.nombre}
+              style={{
+                width: '90px',
+                height: '90px',
+                borderRadius: '50%',
+                objectFit: 'cover'
+              }}
+            />
+          )}
+
+          <h3>{profesional.nombre}</h3>
+          <p>{profesional.especialidad || 'Sin especialidad'}</p>
+
+          <p style={{
+            color: profesional.activo ? '#22c55e' : '#ef4444'
+          }}>
+            {profesional.activo ? 'Activo' : 'Inactivo'}
+          </p>
+
+          <button
+            className="secondary-button"
+            onClick={() => editarProfesional(profesional)}
+          >
+            ✎ Editar
+          </button>
+        </div>
+      ))}
+
+      {profesionales.length === 0 && (
+        <p>Todavía no hay profesionales registrados.</p>
+      )}
+    </div>
+  </section>
+)}
+
 {seccionActiva === 'reservas' && (
   <section className="panel" style={{ marginTop: '24px' }}>
     <div className="panel-heading">

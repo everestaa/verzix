@@ -9,6 +9,10 @@ function PaginaNegocio() {
   const [error, setError] = useState('')
   const [servicios, setServicios] = useState([])
   const [servicioSeleccionado, setServicioSeleccionado] = useState('')
+  const [profesionales, setProfesionales] = useState([])
+const [profesionalSeleccionado, setProfesionalSeleccionado] = useState('')
+const [serviciosSeleccionados, setServiciosSeleccionados] = useState([])
+const [serviciosDelProfesional, setServiciosDelProfesional] = useState([])
 const [fechaSeleccionada, setFechaSeleccionada] = useState('')
 const [horaSeleccionada, setHoraSeleccionada] = useState('')
 const [horariosDisponibles, setHorariosDisponibles] = useState([])
@@ -57,6 +61,17 @@ const [guardandoReserva, setGuardandoReserva] = useState(false)
   } else {
     setServicios(serviciosData || [])
 console.table(serviciosData)
+const { data: profesionalesData, error: profesionalesError } =
+  await supabase.rpc('profesionales_publicos', {
+    p_slug: slug
+  })
+
+if (profesionalesError) {
+  console.error('Error al cargar profesionales:', profesionalesError)
+  setError('No se pudieron cargar los profesionales.')
+} else {
+  setProfesionales(profesionalesData || [])
+}
   }
 }
 
@@ -65,40 +80,80 @@ console.table(serviciosData)
 
     cargarNegocio()
   }, [])
-const cargarHorarios = async (fecha, servicioId) => {
+
+const cargarServiciosProfesional = async (profesionalId) => {
+  setServiciosDelProfesional([])
+  setServiciosSeleccionados([])
+  setServicioSeleccionado('')
+  setFechaSeleccionada('')
+  setHoraSeleccionada('')
+  setHorariosDisponibles([])
+
+  if (!profesionalId) return
+
+  const { data, error } = await supabase.rpc(
+    'servicios_profesional_publicos',
+    {
+      p_profesional_id: Number(profesionalId)
+    }
+  )
+
+  if (error) {
+    setMensajeReserva('Error al cargar servicios: ' + error.message)
+    return
+  }
+
+  setServiciosDelProfesional(data || [])
+}
+
+
+const cargarHorarios = async (fecha) => {
   setHoraSeleccionada('')
   setMensajeReserva('')
   setHorariosDisponibles([])
 
-  if (!fecha || !servicioId || !negocio) return
+  if (
+    !fecha ||
+    !profesionalSeleccionado ||
+    serviciosSeleccionados.length === 0 ||
+    !negocio
+  ) return
 
   const slug = window.location.pathname.split('/').filter(Boolean)[0]
 
-const { data, error } = await supabase.rpc('horarios_disponibles', {
-  p_slug: slug,
-  p_servicio_id: Number(servicioId),
-  p_fecha: String(fecha).slice(0, 10)
-})
+  const { data, error } = await supabase.rpc(
+    'horarios_disponibles_profesional',
+    {
+      p_slug: slug,
+      p_profesional_id: Number(profesionalSeleccionado),
+      p_servicio_ids: serviciosSeleccionados.map(Number),
+      p_fecha: String(fecha).slice(0, 10)
+    }
+  )
+
   if (error) {
     setMensajeReserva('Error al consultar horarios: ' + error.message)
     return
   }
 
   setHorariosDisponibles(
-    (data || []).map((item) => item.hora.slice(0, 5))
+    (data || []).map(item => item.hora.slice(0, 5))
   )
 }
 
 
+
+
 const registrarReservaPublica = async () => {
   if (
-    !servicioSeleccionado ||
+    !profesionalSeleccionado ||
+    serviciosSeleccionados.length === 0 ||
     !fechaSeleccionada ||
     !horaSeleccionada ||
     !clienteNombre.trim() ||
     !clienteWhatsapp.trim()
   ) {
-    setMensajeReserva('Completá todos los campos.')
+    setMensajeReserva('Completá todos los campos y elegí un profesional, servicios, fecha y horario.')
     return
   }
 
@@ -108,25 +163,33 @@ const registrarReservaPublica = async () => {
 
   const slug = window.location.pathname.split('/').filter(Boolean)[0]
 
-  const { data, error } = await supabase.rpc('reservar_turno', {
-    p_slug: slug,
-    p_servicio_id: Number(servicioSeleccionado),
-    p_cliente_nombre: clienteNombre.trim(),
-    p_cliente_whatsapp: clienteWhatsapp.trim(),
-    p_fecha: fechaSeleccionada,
-    p_hora: horaSeleccionada
-  })
+  const { data, error } = await supabase.rpc(
+    'reservar_turno_profesional',
+    {
+      p_slug: slug,
+      p_profesional_id: Number(profesionalSeleccionado),
+      p_servicio_ids: serviciosSeleccionados.map(Number),
+      p_cliente_nombre: clienteNombre.trim(),
+      p_cliente_whatsapp: clienteWhatsapp.trim(),
+      p_fecha: fechaSeleccionada,
+      p_hora: horaSeleccionada
+    }
+  )
 
   setGuardandoReserva(false)
 
   if (error) {
     setMensajeReserva(error.message)
-    await cargarHorarios(fechaSeleccionada, servicioSeleccionado)
+    await cargarHorarios(fechaSeleccionada)
     return
   }
 
-  const servicio = servicios.find(
-    (item) => String(item.id) === String(servicioSeleccionado)
+  const serviciosReserva = serviciosDelProfesional.filter(
+    servicio => serviciosSeleccionados.includes(String(servicio.id))
+  )
+
+  const profesional = profesionales.find(
+    item => String(item.id) === String(profesionalSeleccionado)
   )
 
   const codigoReserva = data?.reserva_id
@@ -142,7 +205,8 @@ const registrarReservaPublica = async () => {
 
 Código de reserva: #${codigoReserva}
 Cliente: ${clienteNombre.trim()}
-Servicio: ${servicio?.nombre || ''}
+Profesional: ${profesional?.nombre || ''}
+Servicios: ${serviciosReserva.map(item => item.nombre).join(', ')}
 Fecha: ${fechaSeleccionada}
 Hora: ${horaSeleccionada}
 
@@ -157,10 +221,11 @@ Hora: ${horaSeleccionada}
   setClienteWhatsapp('')
   setHoraSeleccionada('')
 
-  await cargarHorarios(fechaSeleccionada, servicioSeleccionado)
+  await cargarHorarios(fechaSeleccionada)
 
   setMensajeReserva('¡Tu reserva fue registrada correctamente!')
 }
+
 
   if (cargando) return <p>Cargando negocio...</p>
   if (error) return <p>{error}</p>
@@ -351,10 +416,60 @@ alt={`Interior de ${personalizacion?.nombre_publico || negocio.nombre}`}
   <h2>Reservá tu turno</h2>
 
 
+<label className="titulo-servicios">Elegí tu profesional</label>
+
+<div className="servicios-selector">
+  {profesionales.length === 0 ? (
+    <p>No hay profesionales disponibles.</p>
+  ) : (
+    profesionales.map((profesional) => (
+      <div
+        key={profesional.id}
+        className={`servicio-opcion ${
+          String(profesionalSeleccionado) === String(profesional.id)
+            ? 'servicio-elegido'
+            : ''
+        }`}
+      >
+        {profesional.foto_url && (
+          <img
+            src={profesional.foto_url}
+            alt={profesional.nombre}
+            style={{
+              width: '100%',
+              height: '180px',
+              objectFit: 'cover',
+              borderRadius: '12px'
+            }}
+          />
+        )}
+
+        <div className="servicio-info">
+          <h3>{profesional.nombre}</h3>
+          <p>{profesional.especialidad || 'Profesional'}</p>
+
+          <button
+            type="button"
+            className="boton-elegir-servicio"
+            onClick={() => {
+setProfesionalSeleccionado(String(profesional.id))
+cargarServiciosProfesional(profesional.id)
+            }}
+          >
+            {String(profesionalSeleccionado) === String(profesional.id)
+              ? '✓ PROFESIONAL ELEGIDO'
+              : 'ELEGIR PROFESIONAL'}
+          </button>
+        </div>
+      </div>
+    ))
+  )}
+</div>
+
 <label className="titulo-servicios">Elegí tu servicio</label>
 
 <div className="servicios-selector">
-  {servicios.map((servicio) => (
+{serviciosDelProfesional.map((servicio) => (
     <div
       key={servicio.id}
       className={`servicio-opcion ${
@@ -390,21 +505,28 @@ alt={`Interior de ${personalizacion?.nombre_publico || negocio.nombre}`}
         <button
           type="button"
           className="boton-elegir-servicio"
-          onClick={() => {
-            const id = String(servicio.id)
 
-            setServicioSeleccionado(id)
-            setHoraSeleccionada('')
-            setHorariosDisponibles([])
+onClick={() => {
+  const id = String(servicio.id)
 
-            if (fechaSeleccionada) {
-              cargarHorarios(fechaSeleccionada, id)
-            }
-          }}
+  setServiciosSeleccionados(actuales => {
+    const nuevos = actuales.includes(id)
+      ? actuales.filter(item => item !== id)
+      : [...actuales, id]
+
+    setServicioSeleccionado(nuevos[0] || '')
+    return nuevos
+  })
+
+  setHoraSeleccionada('')
+  setHorariosDisponibles([])
+  setMensajeReserva('')
+}}
+
         >
-          {servicioSeleccionado === String(servicio.id)
-            ? '✓ SERVICIO ELEGIDO'
-            : 'ELEGIR SERVICIO'}
+{serviciosSeleccionados.includes(String(servicio.id))
+  ? '✓ SERVICIO ELEGIDO'
+  : 'ELEGIR SERVICIO'}
         </button>
       </div>
     </div>
@@ -422,10 +544,10 @@ alt={`Interior de ${personalizacion?.nombre_publico || negocio.nombre}`}
       const hoy = new Date()
       return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`
     })()}
-    onChange={(e) => {
-      setFechaSeleccionada(e.target.value)
-      cargarHorarios(e.target.value, servicioSeleccionado)
-    }}
+onChange={(e) => {
+  setFechaSeleccionada(e.target.value)
+  cargarHorarios(e.target.value)
+}}
   />
 </div>
 
@@ -463,7 +585,8 @@ alt={`Interior de ${personalizacion?.nombre_publico || negocio.nombre}`}
 
 {horariosDisponibles.length === 0 &&
   fechaSeleccionada &&
-  servicioSeleccionado && (
+  profesionalSeleccionado &&
+  serviciosSeleccionados.length > 0 && (
     <p className="sin-horarios">
       No hay horarios disponibles para esta fecha.
     </p>
@@ -486,27 +609,39 @@ alt={`Interior de ${personalizacion?.nombre_publico || negocio.nombre}`}
     onChange={(e) => setClienteWhatsapp(e.target.value)}
   />
 
-{servicioSeleccionado && fechaSeleccionada && horaSeleccionada && (
+
+{serviciosSeleccionados.length > 0 &&
+ fechaSeleccionada &&
+ horaSeleccionada && (
   <div className="resumen-reserva">
     <h3>RESUMEN DE TU RESERVA</h3>
 
     <div className="resumen-linea">
-      <span>Servicio</span>
+      <span>Profesional</span>
       <strong>
-        {servicios.find(
-          (s) => String(s.id) === String(servicioSeleccionado)
+        {profesionales.find(
+          p => String(p.id) === String(profesionalSeleccionado)
         )?.nombre}
       </strong>
     </div>
 
     <div className="resumen-linea">
-      <span>Precio</span>
+      <span>Servicios</span>
       <strong>
-        ₲ {Number(
-          servicios.find(
-            (s) => String(s.id) === String(servicioSeleccionado)
-          )?.precio || 0
-        ).toLocaleString('es-PY')}
+        {serviciosDelProfesional
+          .filter(s => serviciosSeleccionados.includes(String(s.id)))
+          .map(s => s.nombre)
+          .join(', ')}
+      </strong>
+    </div>
+
+    <div className="resumen-linea">
+      <span>Precio total</span>
+      <strong>
+        ₲ {serviciosDelProfesional
+          .filter(s => serviciosSeleccionados.includes(String(s.id)))
+          .reduce((total, s) => total + Number(s.precio || 0), 0)
+          .toLocaleString('es-PY')}
       </strong>
     </div>
 
@@ -521,6 +656,7 @@ alt={`Interior de ${personalizacion?.nombre_publico || negocio.nombre}`}
     </div>
   </div>
 )}
+
 
 <button
   className="boton-confirmar-reserva"
